@@ -1,0 +1,119 @@
+.header {
+  display: flex;
+  align-items: center;
+
+  width: 100vw;
+  height: 5rem;
+  padding: 0 15.5%;
+
+  background-color: #001519;
+}
+
+.logoContainer {
+  display: flex;
+  align-items: center;
+}
+
+.headerLabel {
+  padding-left: 1rem;
+  color: #ffffff;
+  font-size: 1.25rem;
+}
+
+.headerLabel:hover {
+  text-decoration: underline;
+}
+
+.select {
+  width: 14rem;
+  margin-right: 1rem;
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.optionLabel {
+  padding-left: 1rem;
+}
+
+.menu {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  flex: 1;
+
+  height: 5rem;
+}
+
+.link {
+  display: flex;
+  align-items: center;
+
+  height: 100%;
+  padding: 0 1rem;
+
+  color: #aaaaaa;
+
+  transition: background-color 0.1s ease-in-out, color 0.1s ease-in-out;
+  cursor: pointer;
+}
+
+.link:hover {
+  color: #ffffff;
+  background-color: rgb(11, 100, 201);
+}
+
+.footer {
+  height: 5rem;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  margin-top: 2rem;
+
+  font-size: 0.875rem;
+  color: #aaaaaa;
+  background-color: #001519;
+}
+
+@media screen and (max-width: 1600px) {
+  .header {
+    padding: 0 11%;
+  }
+}
+
+@media screen and (max-width: 1400px) {
+  .header {
+    padding: 0 6.5%;
+  }
+}
+
+@media screen and (max-width: 1250px) {
+  .header {
+    padding: 0 2.5%;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .header {
+    padding: 0 4%;
+  }
+
+  .select {
+    width: 5.5rem;
+    margin-right: 0.5rem;
+  }
+
+  .optionLabel {
+    display: none;
+  }
+
+  .link {
+    padding: 0 0.5rem;
+  }
+}
