@@ -18,10 +18,12 @@
 
 .imageContentCardWrapper {
   width: 33.33%;
-  height: 24rem;
+  height: 25rem;
 
   margin-bottom: 2rem;
   padding: 0 1rem;
+
+  transition: width 0.1s ease, height 0.1s ease;
 }
 
 .imageContentCard {
@@ -46,17 +48,46 @@
 }
 
 .titleText {
+  height: 4rem;
+  max-height: 4rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
   word-break: break-all;
   font-weight: bold;
 }
 
 .copyrightText {
-  margin-top: 0.5rem;
-  font-size: 0.8rem;
+  height: 2rem;
+  line-height: 2rem;
+  font-size: 0.875rem;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dateContainer {
+  height: 2rem;
+  display: flex;
+  align-items: center;
+}
+
+.dateIcon {
+  font-size: 0.75rem;
 }
 
 .dateText {
-  font-size: 0.8rem;
+  font-size: 0.875rem;
+}
+
+.bottomText {
+  color: #aaa;
+  margin: 0;
+  padding: 2rem;
 }
 
 @media screen and (max-width: 1600px) {

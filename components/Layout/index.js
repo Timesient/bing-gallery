@@ -1,15 +1,16 @@
 import Head from 'next/head';
 import Image from 'next/image';
-import Link from 'next/Link';
+import Link from 'next/link';
 import Select from 'react-select';
 import styles from './Layout.module.css';
 import { countryConfig } from '../../lib/preset';
-import { useDispatch } from 'react-redux';
-import { setCurrentCountry } from '../../store/countrySlice';
-import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { setCurrentCountry, selectCurrentCountry } from '../../store/countrySlice';
+
 
 export default function Layout({ location, children }) {
   const dispatch = useDispatch();
+  const currentCountry = useSelector(selectCurrentCountry);
 
   const options = Object.keys(countryConfig).map(cc => ({
     value: cc,
@@ -26,7 +27,7 @@ export default function Layout({ location, children }) {
     )
   }));
 
-  const defaultOption = options.filter(option => option.value === 'cn')[0];
+  const defaultOption = options.filter(option => option.value === currentCountry)[0];
 
   function handleSelectChanged(option) {
     dispatch(setCurrentCountry(option.value))
