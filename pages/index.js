@@ -12,10 +12,23 @@ import Layout from '../components/Layout/Layout';
 
 export default function Home() {
   const [imageContents, setImageContents] = useState(null);
+  const [distanceToTop, setDistanceToTop] = useState(0);
   const currentCountry = useSelector(selectCurrentCountry);
   const yPosition = useSelector(selectYPosition);
   const dispatch = useDispatch();
   const router = useRouter();
+
+  useEffect(() => {
+    setDistanceToTop(window.scrollY);
+
+    window.onscroll = () => {
+      setDistanceToTop(window.scrollY);
+    }
+
+    return () => {
+      window.onscroll = null;
+    }
+  }, []);
 
   useEffect(() => {
     (async () => {
@@ -45,6 +58,14 @@ export default function Home() {
     router.push(`/detail/${cardID}`);
   }
 
+  function handleToTopButtonClicked() {
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: 'smooth'
+    });
+  }
+
   return (
     <Layout location="Home">
       <main className={styles.container}>
@@ -63,7 +84,7 @@ export default function Home() {
                     data-id={imageContent.id}
                   >
                     <Image 
-                      src={imageContent.urls['640x480']}
+                      src={imageContent.urls['800x480']}
                       width={320}
                       height={240}
                       alt={imageContent.title}
@@ -84,6 +105,17 @@ export default function Home() {
         </div>
 
         { imageContents && <p className={styles.bottomText}>All images are loaded.</p> }
+
+        <span 
+          className={[
+            styles.toTopButton,
+            'material-symbols-outlined',
+            distanceToTop === 0 ? styles.toTopButtonHidden : ''
+          ].join(' ')}
+          onClick={handleToTopButtonClicked}
+        >
+          arrow_upward
+        </span>
       </main>
     </Layout>
   )
