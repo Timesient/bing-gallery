@@ -8,7 +8,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { selectCurrentCountry } from '../store/countrySlice';
 import { selectYPosition, setYPosition } from '../store/scrollSlice';
 import { countryConfig } from '../lib/preset';
-import Layout from '../components/Layout';
+import Layout from '../components/Layout/Layout';
 
 export default function Home() {
   const [imageContents, setImageContents] = useState(null);
@@ -21,11 +21,13 @@ export default function Home() {
     (async () => {
       const data = await axios.get(`/api/images?mode=all&resolution=all&cc=${currentCountry}`).then(res => res.data.data);
       setImageContents(data);
-
-      window.scrollTo(0, yPosition);
-      dispatch(setYPosition(0));
+      
+      if (yPosition !== 0) {
+        window.scrollTo(0, yPosition);
+        dispatch(setYPosition(0));
+      }
     })();
-  }, [currentCountry]);
+  }, [currentCountry, dispatch]);
 
   function getDateString(timestamp) {
     const time = new Date(timestamp + countryConfig[currentCountry].timezone * 60 * 60 * 1000);

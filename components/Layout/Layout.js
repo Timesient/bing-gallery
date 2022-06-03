@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
-import Select from 'react-select';
+import Select from '../Select/Select';
 import styles from './Layout.module.css';
 import { countryConfig } from '../../lib/preset';
 import { useDispatch, useSelector } from 'react-redux';
@@ -21,16 +21,17 @@ export default function Layout({ location, children }) {
           width={24}
           height={24}
           alt={cc}
+          layout="fixed"
         />
         <span className={styles.optionLabel}>{countryConfig[cc].fullname}</span>
       </div>
     )
   }));
 
-  const defaultOption = options.filter(option => option.value === currentCountry)[0];
+  const selectedOption = options.filter(option => option.value === currentCountry)[0];
 
-  function handleSelectChanged(option) {
-    dispatch(setCurrentCountry(option.value))
+  function handleSelectChanged(value) {
+    dispatch(setCurrentCountry(value))
   }
 
   return (
@@ -56,12 +57,10 @@ export default function Layout({ location, children }) {
 
         <div className={styles.menu}>
           <Select
-            className={styles.select}
-            classNamePrefix='Select'
-            onChange={handleSelectChanged}
-            isSearchable={false}
-            defaultValue={defaultOption}
+            extraClassNames={[styles.select]}
             options={options}
+            selectedOption={selectedOption}
+            onChange={handleSelectChanged}
           />
           <Link href="/about">
             <a className={styles.link}>About</a>

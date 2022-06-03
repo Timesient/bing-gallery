@@ -24,8 +24,7 @@
 }
 
 .select {
-  width: 14rem;
-  margin-right: 1rem;
+  margin-right: 0.5rem;
 }
 
 .option {
@@ -35,7 +34,7 @@
 }
 
 .optionLabel {
-  padding-left: 1rem;
+  padding-left: 0.5rem;
 }
 
 .menu {
@@ -58,6 +57,7 @@
 
   transition: background-color 0.1s ease-in-out, color 0.1s ease-in-out;
   cursor: pointer;
+  user-select: none;
 }
 
 .link:hover {
