@@ -3,20 +3,40 @@ import { useRouter } from 'next/router';
 import Head from 'next/head';
 import Image from 'next/image';
 import styles from '../styles/Home.module.css';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { selectCurrentCountry } from '../store/countrySlice';
+import { selectCurrentCountry, setCurrentCountry } from '../store/countrySlice';
 import { selectYPosition, setYPosition } from '../store/scrollSlice';
 import { countryConfig } from '../lib/preset';
 import Layout from '../components/Layout/Layout';
+import Select from '../components/Select/Select';
 
 export default function Home() {
   const [imageContents, setImageContents] = useState(null);
   const [distanceToTop, setDistanceToTop] = useState(0);
+  const [isRenderCompleted, setIsRenderCompleted] = useState(false);
   const currentCountry = useSelector(selectCurrentCountry);
   const yPosition = useSelector(selectYPosition);
   const dispatch = useDispatch();
   const router = useRouter();
+
+  const options = Object.keys(countryConfig).map(cc => ({
+    value: cc,
+    label: (
+      <div className={styles.option}>
+        <Image
+          src={`/images/${cc}.png`}
+          width={24}
+          height={24}
+          alt={cc}
+          layout="fixed"
+        />
+        <span className={styles.optionLabel}>{countryConfig[cc].fullname}</span>
+      </div>
+    )
+  }));
+
+  const selectedOption = options.filter(option => option.value === currentCountry)[0];
 
   useEffect(() => {
     setDistanceToTop(window.scrollY);
@@ -32,13 +52,19 @@ export default function Home() {
 
   useEffect(() => {
     (async () => {
-      const data = await axios.get(`/api/images?mode=all&resolution=all&cc=${currentCountry}`).then(res => res.data.data);
+      const data = await axios.get(`/api/images?mode=all&cc=${currentCountry}`).then(res => res.data.data);
       setImageContents(data);
       
       if (yPosition !== 0) {
-        window.scrollTo(0, yPosition);
-        dispatch(setYPosition(0));
+        setTimeout(() => {
+          window.scrollTo(0, yPosition);
+          dispatch(setYPosition(0));
+        }, 0);
       }
+
+      setTimeout(() => {
+        setIsRenderCompleted(true);
+      }, 0);
     })();
   }, [currentCountry, dispatch]);
 
@@ -48,6 +74,10 @@ export default function Home() {
     const month = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][time.getUTCMonth()];
     const date = time.getUTCDate();
     return `${month} ${date}, ${year}`;
+  }
+
+  function handleSelectChanged(value) {
+    dispatch(setCurrentCountry(value))
   }
 
   function handleCardClicked(e) {
@@ -68,11 +98,27 @@ export default function Home() {
 
   return (
     <Layout location="Home">
+
+      <div className={[
+        styles.loadingMask,
+        isRenderCompleted ? styles.loadingMaskHidden : ''
+      ].join(' ')} />
+
       <main className={styles.container}>
         <Head>
           <title>Bing Gallery</title>
         </Head>
 
+        <div className={styles.countrySelectContainer}>
+          <span className={styles.countrySelectLabel}>Current :</span>
+          <Select
+            extraClassNames={[styles.select]}
+            options={options}
+            selectedOption={selectedOption}
+            onChange={handleSelectChanged}
+          />
+        </div>
+        
         <div className={styles.imageContainer}>
           {
             imageContents && imageContents.map((imageContent, index) => (

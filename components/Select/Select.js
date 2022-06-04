@@ -7,7 +7,7 @@ export default function Select({extraClassNames, options, selectedOption, onChan
 
   useEffect(() => {
     function mouseDownHandler(e) {
-      if (isExpand && !containerRef.current.contains(e.target)) {
+      if (isExpand && containerRef.current && !containerRef.current.contains(e.target)) {
         setIsExpand(false);
       }
     }

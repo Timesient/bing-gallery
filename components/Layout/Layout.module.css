@@ -1,11 +1,14 @@
 .header {
+  height: 5rem;
+  background-color: #001519;
+}
+
+.headerContentWrapper {
   display: flex;
   align-items: center;
-
-  height: 5rem;
-  padding: 0 15.5%;
-
-  background-color: #001519;
+  width: 80rem;
+  margin: 0 auto;
+  padding: 0 1rem;
 }
 
 .logoContainer {
@@ -21,20 +24,6 @@
 
 .headerLabel:hover {
   text-decoration: underline;
-}
-
-.select {
-  margin-right: 0.5rem;
-}
-
-.option {
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-}
-
-.optionLabel {
-  padding-left: 0.5rem;
 }
 
 .menu {
@@ -78,39 +67,15 @@
   background-color: #001519;
 }
 
-@media screen and (max-width: 1600px) {
-  .header {
-    padding: 0 11%;
+
+@media screen and (max-width: 1300px) {
+  .headerContentWrapper {
+    width: 63rem;
   }
 }
 
-@media screen and (max-width: 1400px) {
-  .header {
-    padding: 0 6.5%;
-  }
-}
-
-@media screen and (max-width: 1250px) {
-  .header {
-    padding: 0 2.5%;
-  }
-}
-
-@media screen and (max-width: 600px) {
-  .header {
-    padding: 0 4%;
-  }
-
-  .select {
-    width: 5.5rem;
-    margin-right: 0.5rem;
-  }
-
-  .optionLabel {
-    display: none;
-  }
-
-  .link {
-    padding: 0 0.5rem;
+@media screen and (max-width: 1024px) {
+  .headerContentWrapper {
+    width: 100%;
   }
 }

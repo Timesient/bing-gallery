@@ -1,12 +1,17 @@
-import Head from 'next/head'
-
+import Head from 'next/head';
+import Layout from '../components/Layout/Layout';
+import styles from '../styles/About.module.css';
 
 export default function About() {
   return (
-    <div>
+    <Layout>
       <Head>
-        <title>About</title>
+        <title>Bing Gallery - About</title>
       </Head>
-    </div>
+
+      <div className={styles.container}>
+        Bing Gallery
+      </div>
+    </Layout>
   )
 }

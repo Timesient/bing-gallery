@@ -1,76 +1,129 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 
-import { getAllImageData } from "../../lib/getImageData";
+import { getLatestImageData, getRandomImageData, getAllImageData } from "../../lib/getImageData";
 import { resolutionConfig, countryConfig } from "../../lib/preset";
 
 export default async function handler(req, res) {
-  const query = req.query;
+  const { mode, cc, format, resolution } = req.query;
 
   // check mode
-  let mode;
-  switch (query.mode) {
-    case undefined:
-      mode = 'latest';
-      break;
-    case 'latest':
-    case 'recent':
-    case 'range':
-    case 'all':
-      mode = query.mode;
-      break;
-    default:
-      res.status(400).json({ error: `mode ${query.mode} is not supported` });
-      return;
+  const checkModeResult = checkMode(mode);
+  if (checkModeResult.error) {
+    res.status(400).json({ error: checkModeResult.error });
+    return;
   }
 
+  // check cc
+  const checkCountryCodeResult = checkCountryCode(cc);
+  if (checkCountryCodeResult.error) {
+    res.status(400).json({ error: checkCountryCodeResult.error });
+    return;
+  }
 
-  // check resolution
-  let resolution = [];
-  if (query.resolution === undefined) resolution = ['1920x1080'];
-  else if (query.resolution === 'all' || query.resolution?.includes('all')) resolution = resolutionConfig;
-  else {
-    if (typeof query.resolution === 'string') resolution = [query.resolution];
-    if (typeof query.resolution === 'object') resolution = query.resolution;
+  // check format & resolution
+  if (mode === 'latest' || mode === 'random') {
+    const checkFormatResult = checkFormat(format);
+    if (checkFormatResult.error) {
+      res.status(400).json({ error: checkFormatResult.error });
+      return;
+    }
 
-    for (let i = 0, len = resolution.length; i < len; i++) {
-      if (!resolutionConfig.includes(resolution[i])) {
-        res.status(400).json({ error: `resolution ${resolution[i]} is not supported` });
+    if (format === 'image') {
+      const checkResolutionResult = checkResolution(resolution);
+      if (checkResolutionResult.error) {
+        res.status(400).json({ error: checkResolutionResult.error });
         return;
       }
     }
   }
 
-  // check country code
-  let cc;
-  if (query.cc === undefined) cc = 'cn';
-  else if (Object.keys(countryConfig).includes(query.cc)) cc = query.cc;
-  else {
-    res.status(400).json({ error: `cc(country code) ${query.cc} is not supported` });
+  // handle mode latest
+  if (mode === 'latest') {
+    if (format === 'image') {
+      const data = getLatestImageData(cc);
+      res.redirect(307, data.urls[resolution]);
+    }
+
+    if (format === 'json') {
+      const data = getLatestImageData(cc);
+      res.status(200).json({ data });
+    }
+
     return;
   }
 
+  // handle mode random
+  if (mode === 'random') {
+    if (format === 'image') {
+      const data = getRandomImageData(cc);
+      res.redirect(307, data.urls[resolution]);
+    }
 
-  // add mode 'random?'
-
-  // handle mode 'latest'
-  if (mode === 'latest') {
-    const data = await getLatestImageData(resolution, cc);
-    res.status(200).json({ data });
+    if (format === 'json') {
+      const data = getRandomImageData(cc);
+      res.status(200).json({ data });
+    }
+    
+    return;
   }
 
-  // handle mode 'recent'
-  if (mode === 'recent') {
-    const data = await getRecentImageData(resolution, cc);
-    res.status(200).json({ data });
-  }
-
-  if (mode === 'range') {
-    res.status(500).json({ error: 'mode range is not supported now' });
-  }
-
-  // handle mode 'all'
+  // handle mode all
   if (mode === 'all') {
-    const data = getAllImageData(resolution, cc);
+    const data = getAllImageData(cc);
     res.status(200).json({ data });
+  }
+}
+
+
+// check mode
+function checkMode(mode) {
+  switch (mode) {
+    case 'latest':
+    case 'random':
+    case 'all':
+      return { error: null }
+    case undefined:
+      return { error: "Missing query param 'mode'" }
+    default:
+      return { error: `Invalid value '${mode}' for param 'mode'` }
+  }
+}
+
+// check country code
+function checkCountryCode(countryCode) {
+  if (countryCode === undefined) {
+    return { error: "Missing query param 'cc'" }
+  }
+
+  if (!Object.keys(countryConfig).includes(countryCode)) {
+    return { error: `Invalid value '${countryCode}' for param 'cc'` }
+  }
+
+  return { error: null }
+}
+
+// check format
+function checkFormat(format) {
+  switch (format) {
+    case 'json':
+    case 'image':
+      return { error: null }
+    case undefined:
+      return { error: "Missing query param 'format'" }
+    default:
+      return { error: `Invalid value '${format}' for param 'format'` }
+  }
+}
+
+// check resolution
+function checkResolution(resolution) {
+  switch (resolution) {
+    case '1920x1080':
+    case 'UHD':
+      return { error: null }
+    case undefined:
+      return { error: "Missing query param 'resolution'" }
+    default:
+      return { error: `Invalid value '${resolution}' for param 'resolution'` }
   }
 }
