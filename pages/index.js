@@ -123,28 +123,28 @@ export default function Home() {
           {
             imageContents && imageContents.map((imageContent, index) => (
               <div key={`${imageContent.id}-${index}`} className={styles.imageContentCardWrapper}>
-                  <a
-                    href={`/detail/${imageContent.id}`}
-                    className={styles.imageContentCard}
-                    onClick={handleCardClicked}
-                    data-id={imageContent.id}
-                  >
-                    <Image 
-                      src={imageContent.urls['800x480']}
-                      width={320}
-                      height={240}
-                      alt={imageContent.title}
-                    />
-                    <div className={styles.textContainer}>
-                      <span className={styles.titleText}>{ imageContent.title }</span>
-                      <span className={styles.copyrightText}>{ imageContent.copyright }</span>
-                      <div className={styles.dateContainer}>
-                        <span className={`${styles.dateIcon} material-symbols-outlined`}>calendar_month</span>
-                        &nbsp;
-                        <span className={styles.dateText}>{getDateString(imageContent.timestamp)}</span>
-                      </div>
+                <a
+                  href={`/detail/${imageContent.id}`}
+                  className={styles.imageContentCard}
+                  onClick={handleCardClicked}
+                  data-id={imageContent.id}
+                >
+                  <Image 
+                    src={imageContent.urls['800x480']}
+                    width={320}
+                    height={240}
+                    alt={imageContent.title}
+                  />
+                  <div className={styles.textContainer}>
+                    <span className={styles.titleText}>{ imageContent.title }</span>
+                    <span className={styles.copyrightText}>{ imageContent.copyright }</span>
+                    <div className={styles.dateContainer}>
+                      <span className={`${styles.dateIcon} material-symbols-outlined`}>calendar_month</span>
+                      &nbsp;
+                      <span className={styles.dateText}>{getDateString(imageContent.timestamp)}</span>
                     </div>
-                  </a>
+                  </div>
+                </a>
               </div>
             ))
           }

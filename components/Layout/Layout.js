@@ -38,7 +38,7 @@ export default function Layout({ location, children }) {
 
       <footer className={styles.footer}>
         <span>@ 2022 bing.dd1969.xyz</span>
-        <span>The images are provided for wallpaper use only.</span>
+        {/* <span>The images are provided for wallpaper use only.</span> */}
       </footer>
     </div>
   )

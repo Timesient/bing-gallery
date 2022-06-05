@@ -1,4 +1,55 @@
 .container {
   min-height: calc(100vh - 10rem);
-  
+  width: 50rem;
+  max-width: 50rem;
+  margin: 0 auto;
+  padding: 2rem 0;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.title {
+  margin-bottom: 1rem;
+  font-weight: bold;
+  font-size: 2rem;
+}
+
+.list {
+  margin-top: 0.25rem;
+}
+
+.link {
+  color: #2289ff;
+  text-decoration: underline;
+  word-break: break-all;
+}
+
+.sectionTitle {
+  font-weight: bold;
+}
+
+.requiredLabel {
+  font-weight: bold;
+}
+
+.codeBlock {
+  margin-top: 0.25rem;
+  padding: 1rem;
+
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  font-weight: normal;
+
+  overflow-x: auto;
+
+  background-color: #ddf0ff;
+  border-radius: 0.25rem;
+}
+
+@media screen and (max-width: 840px) {
+  .container {
+    width: 100%;
+    padding: 2rem 1rem;
+  }
 }
