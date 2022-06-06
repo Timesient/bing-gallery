@@ -38,13 +38,13 @@ and developed with [React](https://reactjs.org/) and [Next.js](https://nextjs.or
 
 ### Request Examples
 ```
-http://localhost:23456/api/images?mode=latest&cc=cn&format=json
+https://bing.dd1969.xyz/api/images?mode=latest&cc=cn&format=json
 ```
 ```
-http://localhost:23456/api/images?mode=random&cc=fr&format=image&resolution=1920x1080
+https://bing.dd1969.xyz/api/images?mode=random&cc=fr&format=image&resolution=1920x1080
 ```
 ```
-http://localhost:23456/api/images?mode=all&cc=gb
+https://bing.dd1969.xyz/api/images?mode=all&cc=gb
 ```
 
 ### Response Example
