@@ -8,7 +8,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { selectIsOverall, setIsOverall } from '../store/overallSlice';
 import { selectCurrentCountry, setCurrentCountry } from '../store/countrySlice';
 import { selectYPosition, setYPosition } from '../store/scrollSlice';
-import { countryConfig } from '../lib/preset';
+import { countryConfig, getCountryCodeByID } from '../lib/preset';
 import { getOverallImageData } from '../lib/getImageData';
 import Layout from '../components/Layout/Layout';
 import Select from '../components/Select/Select';
@@ -81,8 +81,9 @@ export default function Home({ overallData }) {
     })();
   }, [overallData, isOverall, currentCountry, dispatch]);
 
-  function getDateString(timestamp) {
-    const time = new Date(timestamp + countryConfig[currentCountry].timezone * 60 * 60 * 1000);
+  function getDateString({ id, timestamp }) {
+    const countryCode = getCountryCodeByID(id);
+    const time = new Date(timestamp + countryConfig[countryCode].timezone * 60 * 60 * 1000);
     const year = time.getUTCFullYear();
     const month = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][time.getUTCMonth()];
     const date = time.getUTCDate();
@@ -162,7 +163,7 @@ export default function Home({ overallData }) {
                     <div className={styles.dateContainer}>
                       <span className={`${styles.dateIcon} material-symbols-outlined`}>calendar_month</span>
                       &nbsp;
-                      <span className={styles.dateText}>{getDateString(imageContent.timestamp)}</span>
+                      <span className={styles.dateText}>{getDateString(imageContent)}</span>
                     </div>
                   </div>
                 </a>

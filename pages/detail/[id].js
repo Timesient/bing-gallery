@@ -8,12 +8,11 @@ import { useDispatch } from 'react-redux';
 import styles from '../../styles/Detail.module.css';
 import { setCurrentCountry } from '../../store/countrySlice';
 import { getCertainImageData } from '../../lib/getImageData';
-import { resolutionConfig, countryConfig } from '../../lib/preset';
+import { resolutionConfig, countryConfig, getCountryCodeByID } from '../../lib/preset';
 
 export async function getServerSideProps(context) {
   const id = context.query.id;
-  const languageCode = id.split('_')[1].match(/(.*)\d{10}/)[1];
-  const countryCode = Object.keys(countryConfig).filter(countryCode => countryConfig[countryCode].languageCode === languageCode)[0];
+  const countryCode = getCountryCodeByID(id);
   const imageContent = getCertainImageData(id, resolutionConfig, countryCode);
 
   return {
