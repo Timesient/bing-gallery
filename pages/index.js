@@ -3,18 +3,31 @@ import { useRouter } from 'next/router';
 import Head from 'next/head';
 import Image from 'next/image';
 import styles from '../styles/Home.module.css';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { selectIsOverall, setIsOverall } from '../store/overallSlice';
 import { selectCurrentCountry, setCurrentCountry } from '../store/countrySlice';
 import { selectYPosition, setYPosition } from '../store/scrollSlice';
 import { countryConfig } from '../lib/preset';
+import { getOverallImageData } from '../lib/getImageData';
 import Layout from '../components/Layout/Layout';
 import Select from '../components/Select/Select';
 
-export default function Home() {
+export async function getServerSideProps(context) {
+  const overallData = getOverallImageData();
+
+  return {
+    props: {
+      overallData
+    }
+  }
+}
+
+export default function Home({ overallData }) {
   const [imageContents, setImageContents] = useState(null);
   const [distanceToTop, setDistanceToTop] = useState(0);
   const [isRenderCompleted, setIsRenderCompleted] = useState(false);
+  const isOverall = useSelector(selectIsOverall);
   const currentCountry = useSelector(selectCurrentCountry);
   const yPosition = useSelector(selectYPosition);
   const dispatch = useDispatch();
@@ -51,8 +64,12 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
+    
+  }, [isOverall]);
+
+  useEffect(() => {
     (async () => {
-      const data = await axios.get(`/api/images?mode=all&cc=${currentCountry}`).then(res => res.data.data);
+      const data = isOverall ? overallData : await axios.get(`/api/images?mode=all&cc=${currentCountry}`).then(res => res.data.data);
       setImageContents(data);
       
       if (yPosition !== 0) {
@@ -66,7 +83,7 @@ export default function Home() {
         setIsRenderCompleted(true);
       }, 0);
     })();
-  }, [currentCountry, dispatch]);
+  }, [overallData, isOverall, currentCountry, dispatch]);
 
   function getDateString(timestamp) {
     const time = new Date(timestamp + countryConfig[currentCountry].timezone * 60 * 60 * 1000);
@@ -109,14 +126,22 @@ export default function Home() {
           <title>Bing Gallery</title>
         </Head>
 
-        <div className={styles.countrySelectContainer}>
-          <span className={styles.countrySelectLabel}>Current :</span>
-          <Select
-            extraClassNames={[styles.select]}
-            options={options}
-            selectedOption={selectedOption}
-            onChange={handleSelectChanged}
-          />
+        <div className={styles.controlPanel}>
+          <div className={styles.modeSelectContainer}>
+            <span className={isOverall ? styles.selectedMode : styles.notSelectedMode} onClick={() => dispatch(setIsOverall(true))}>Overall</span>
+            <span style={{ padding: '0 0.5rem' }}></span>
+            <span className={isOverall ? styles.notSelectedMode : styles.selectedMode} onClick={() => dispatch(setIsOverall(false))}>Country</span>
+          </div>
+          {
+            !isOverall && (
+              <Select
+                extraClassNames={[styles.select]}
+                options={options}
+                selectedOption={selectedOption}
+                onChange={handleSelectChanged}
+              />
+            )
+          }
         </div>
         
         <div className={styles.imageContainer}>

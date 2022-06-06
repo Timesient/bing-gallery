@@ -29,18 +29,35 @@
   align-items: center;
 }
 
-.countrySelectContainer {
+.controlPanel {
+  width: 100%;
+  height: 2rem;
+
   padding-right: 1rem;
   margin-bottom: 2rem;
 
   display: flex;
+  justify-content: space-between;
   align-items: center;
-
-  align-self: flex-end;
 }
 
-.countrySelectLabel {
+.modeSelectContainer {
+  padding-left: 1rem;
   font-size: 1.25rem;
+}
+
+.selectedMode {
+  color: #0b64c9;
+  border-color: #0b64c9;
+  border-bottom: 0.125rem solid;
+  cursor: pointer;
+  user-select: none;
+}
+
+.notSelectedMode {
+  color: #aaaaaa;
+  cursor: pointer;
+  user-select: none;
 }
 
 .select {
@@ -187,5 +204,9 @@
 @media screen and (max-width: 600px) {
   .imageContentCardWrapper {
     width: 100%;
+  }
+
+  .optionLabel {
+    display: none;
   }
 }
