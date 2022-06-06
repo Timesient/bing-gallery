@@ -64,10 +64,6 @@ export default function Home({ overallData }) {
   }, []);
 
   useEffect(() => {
-    
-  }, [isOverall]);
-
-  useEffect(() => {
     (async () => {
       const data = isOverall ? overallData : await axios.get(`/api/images?mode=all&cc=${currentCountry}`).then(res => res.data.data);
       setImageContents(data);

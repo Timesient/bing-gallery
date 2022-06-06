@@ -20,12 +20,3 @@ class MyApp extends App {
 }
 
 export default createWrapper(makeStore).withRedux(MyApp);
-
-
-/* 
-function MyApp({ Component, pageProps }) {
-  return <Component {...pageProps} />
-}
-
-export default MyApp
-*/

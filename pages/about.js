@@ -26,7 +26,7 @@ export default function About() {
             <li><a className={styles.link} href='https://github.com/TimothyYe/bing-wallpaper' target='_blank' rel='noopener noreferrer'>TimothyYe/bing-wallpaper</a></li>
           </ul>
         </span>
-        <span>Check <a className={styles.link} href='https://github.com/Timesient' target='_blank' rel='noopener noreferrer'>github repo</a> of this website for more detail.</span>
+        <span>Check <a className={styles.link} href='https://github.com/Timesient/bing-gallery' target='_blank' rel='noopener noreferrer'>github repo</a> of this website for more detail.</span>
 
         <div style={{ borderTop: '1px dashed #aaaaaa', margin: '1rem 0' }} />
 
