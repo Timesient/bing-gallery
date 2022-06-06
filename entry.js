@@ -1,7 +1,7 @@
 const next = require('next');
 const express = require('express');
 const { createServer } = require('http');
-const startUpdateSchedule = require('./db/lib/updateDB');
+const { updateAllCountryData, startUpdateSchedule } = require('./db/lib/updateDB');
 
 (async () => {
   const isDev = process.env.NODE_ENV_NOW !== 'production';
@@ -22,5 +22,6 @@ const startUpdateSchedule = require('./db/lib/updateDB');
 
   expressServer.listen(port, () => console.log(`Server deployed on port ${port} at ${new Date()}`));
 
+  updateAllCountryData();
   startUpdateSchedule();
 })();

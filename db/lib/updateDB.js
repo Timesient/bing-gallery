@@ -105,4 +105,7 @@ function startUpdateSchedule() {
   });
 }
 
-module.exports = startUpdateSchedule;
+module.exports = {
+  updateAllCountryData,
+  startUpdateSchedule,
+};
