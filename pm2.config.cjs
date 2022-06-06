@@ -1,5 +1,5 @@
 module.exports = {
-  name: "bing",
+  name: "bing-gallery",
   script: "entry.js",
   env_production: {
     NODE_ENV_NOW: "production"

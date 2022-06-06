@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "cross-env NODE_ENV_NOW=development node entry.js",
     "prod": "next build && cross-env NODE_ENV_NOW=production node entry.js",
+    "pm2": "next build && pm2 start pm2.config.cjs --env production",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
