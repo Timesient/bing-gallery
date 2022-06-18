@@ -19,7 +19,7 @@ export default function About() {
       <div className={styles.container}>
         <span className={styles.title}>Bing Gallery</span>
         <span className={styles.introduce}>
-          Collect wallpapers from Bing homepage everyday, inspired by:
+          Collect wallpapers from <a className={styles.link} href='https://bing.com/' target='_blank' rel='noopener noreferrer'>Bing</a> everyday, inspired by:
           <ul className={styles.list}>
             <li><a className={styles.link} href='https://peapix.com/' target='_blank' rel='noopener noreferrer'>peapix.com</a></li>
             <li><a className={styles.link} href='https://bing.ioliu.cn/' target='_blank' rel='noopener noreferrer'>bing.ioliu.cn</a></li>
@@ -28,9 +28,10 @@ export default function About() {
         </span>
         <span>Check <a className={styles.link} href='https://github.com/Timesient/bing-gallery' target='_blank' rel='noopener noreferrer'>github repo</a> of this website for more detail.</span>
 
-        <div style={{ borderTop: '1px dashed #aaaaaa', margin: '1rem 0' }} />
+        <div style={{ borderTop: '1px dashed #aaaaaa', margin: '2rem 0' }} />
 
-        <span className={styles.sectionTitle}>API</span>
+        <span className={styles.title}>API Reference</span>
+        <span className={styles.sectionTitle}>Basic</span>
         <ul className={styles.list}>
           <li>Endpoint: <code>https://bing.dd1969.xyz/api/images</code></li>
           <li>Method: <code>HTTP GET</code></li>

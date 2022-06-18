@@ -1,18 +1,18 @@
 # Bing Gallery
-Collect wallpapers from Bing homepage everyday, inspired by:
+Collect wallpapers from [Bing](https://bing.com) everyday, inspired by:
 - [peapix.com](https://peapix.com)
 - [bing.ioliu.cn](https://bing.ioliu.cn/)
 - [TimothyYe/bing-wallpaper](https://github.com/TimothyYe/bing-wallpaper)
 
 and developed with [React](https://reactjs.org/) and [Next.js](https://nextjs.org/), deploy on [https://bing.dd1969.xyz](https://bing.dd1969.xyz)
 
-## API
+## API Reference
 
-### basic
+### Basic
 - Endpoint: `https://bing.dd1969.xyz/api/images`
 - Method: `HTTP GET`
 
-### parameters
+### Parameters
 - `mode`: **required**, must be one of:
   - `latest`: get the latest set of data
   - `random`: get one set of data randomly from database
