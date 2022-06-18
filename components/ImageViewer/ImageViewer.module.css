@@ -2,12 +2,30 @@
   width: 100vw;
   height: 100vh;
 
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 99;
+
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 
+  background-color: #000000;
+}
+
+.backgroundImage {
+  position: absolute;
+  z-index: 98;
+
+  width: 100%;
+  height: 100%;
+
   background-size: cover;
   background-position: center center;
+
+  filter: blur(0.25rem);
+  transition: filter 0.1s ease;
 }
 
 .buttonGroup {
@@ -15,9 +33,10 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  z-index: inherit;
 }
 
-.returnButton {
+.closeButton {
   display: block;
   
   width: 5rem;
@@ -56,6 +75,7 @@
   word-break: break-all;
   color: #ffffff;
   background-color: rgba(0, 0, 0, 0.6);
+  z-index: inherit;
 }
 
 .descriptionText {
@@ -73,12 +93,12 @@
   top: 4rem;
   right: 1rem;
 
-
   padding: 1rem;
 
   border-radius: 0.25rem;
   color: #ffffff;
   background-color: rgba(0, 0, 0, 0.6);
+  z-index: inherit;
 }
 
 .downloadListContainer::after {

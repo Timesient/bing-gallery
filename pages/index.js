@@ -1,38 +1,35 @@
 import axios from 'axios';
-import { useRouter } from 'next/router';
 import Head from 'next/head';
 import Image from 'next/image';
-import styles from '../styles/Home.module.css';
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { selectIsOverall, setIsOverall } from '../store/overallSlice';
 import { selectCurrentCountry, setCurrentCountry } from '../store/countrySlice';
-import { selectYPosition, setYPosition } from '../store/scrollSlice';
 import { countryConfig, getCountryCodeByID } from '../lib/preset';
-import { getOverallImageData } from '../lib/getImageData';
+import { getGlobalImageData } from '../lib/getImageData';
 import Layout from '../components/Layout/Layout';
 import Select from '../components/Select/Select';
+import ImageViewer from '../components/ImageViewer/ImageViewer';
+import styles from '../styles/Home.module.css';
 
 export async function getServerSideProps(context) {
-  const overallData = getOverallImageData();
+  const globalData = getGlobalImageData();
 
   return {
     props: {
-      overallData
+      globalData
     }
   }
 }
 
-export default function Home({ overallData }) {
+export default function Home({ globalData }) {
   const [imageContents, setImageContents] = useState(null);
+  const [isGlobal, setIsGlobal] = useState(true);
+  const [imageViewerContent, setImageViewerContent] = useState(null);
   const [distanceToTop, setDistanceToTop] = useState(0);
-  const [isRenderCompleted, setIsRenderCompleted] = useState(false);
-  const isOverall = useSelector(selectIsOverall);
   const currentCountry = useSelector(selectCurrentCountry);
-  const yPosition = useSelector(selectYPosition);
   const dispatch = useDispatch();
-  const router = useRouter();
 
+  // prepare options for country select
   const options = Object.keys(countryConfig).map(cc => ({
     value: cc,
     label: (
@@ -51,6 +48,15 @@ export default function Home({ overallData }) {
 
   const selectedOption = options.filter(option => option.value === currentCountry)[0];
 
+  // init global data for display & load data when tab changes
+  useEffect(() => {
+    (async () => {
+      const data = isGlobal ? globalData : await axios.get(`/api/images?mode=all&cc=${currentCountry}`).then(res => res.data.data);
+      setImageContents(data);
+    })();
+  }, [isGlobal, globalData, currentCountry])
+
+  // for to-top button
   useEffect(() => {
     setDistanceToTop(window.scrollY);
 
@@ -63,24 +69,12 @@ export default function Home({ overallData }) {
     }
   }, []);
 
+  // disable scroll when showing image viewer
   useEffect(() => {
-    (async () => {
-      const data = isOverall ? overallData : await axios.get(`/api/images?mode=all&cc=${currentCountry}`).then(res => res.data.data);
-      setImageContents(data);
-      
-      if (yPosition !== 0) {
-        setTimeout(() => {
-          window.scrollTo(0, yPosition);
-          dispatch(setYPosition(0));
-        }, 0);
-      }
+    document.body.style.overflowY = imageViewerContent ? 'hidden' : 'auto';
+  }, [imageViewerContent]);
 
-      setTimeout(() => {
-        setIsRenderCompleted(true);
-      }, 0);
-    })();
-  }, [overallData, isOverall, currentCountry, dispatch]);
-
+  // generate date string for cards
   function getDateString({ id, timestamp }) {
     const countryCode = getCountryCodeByID(id);
     const time = new Date(timestamp + countryConfig[countryCode].timezone * 60 * 60 * 1000);
@@ -90,47 +84,33 @@ export default function Home({ overallData }) {
     return `${month} ${date}, ${year}`;
   }
 
+  // handle country select changes
   function handleSelectChanged(value) {
     dispatch(setCurrentCountry(value))
   }
 
+  // click card and show image viewer
   function handleCardClicked(e) {
     e.preventDefault();
 
-    const cardID = e.currentTarget.dataset.id;
-    dispatch(setYPosition(window.scrollY));
-    router.push(`/detail/${cardID}`);
-  }
-
-  function handleToTopButtonClicked() {
-    window.scrollTo({
-      top: 0,
-      left: 0,
-      behavior: 'smooth'
-    });
+    const imageContent = imageContents[e.currentTarget.dataset.index];
+    setImageViewerContent(imageContent);
   }
 
   return (
     <Layout location="Home">
-
-      <div className={[
-        styles.loadingMask,
-        isRenderCompleted ? styles.loadingMaskHidden : ''
-      ].join(' ')} />
-
       <main className={styles.container}>
         <Head>
           <title>Bing Gallery</title>
         </Head>
 
         <div className={styles.controlPanel}>
-          <div className={styles.modeSelectContainer}>
-            <span className={isOverall ? styles.selectedMode : styles.notSelectedMode} onClick={() => dispatch(setIsOverall(true))}>Overall</span>
-            <span style={{ padding: '0 0.5rem' }}></span>
-            <span className={isOverall ? styles.notSelectedMode : styles.selectedMode} onClick={() => dispatch(setIsOverall(false))}>Country</span>
+          <div className={styles.tabSelectContainer}>
+            <span className={isGlobal ? styles.selectedTab : styles.notSelectedTab} onClick={() => {setIsGlobal(true)}}>Global</span>
+            <span className={isGlobal ? styles.notSelectedTab : styles.selectedTab} onClick={() => {setIsGlobal(false)}}>Country</span>
           </div>
           {
-            !isOverall && (
+            !isGlobal && (
               <Select
                 extraClassNames={[styles.select]}
                 options={options}
@@ -149,13 +129,13 @@ export default function Home({ overallData }) {
                   href={`/detail/${imageContent.id}`}
                   className={styles.imageContentCard}
                   onClick={handleCardClicked}
-                  data-id={imageContent.id}
+                  data-index={index}
                 >
-                  <Image 
-                    src={imageContent.urls['800x480']}
-                    width={320}
-                    height={240}
-                    alt={imageContent.title}
+                  <div
+                    className={styles.imageThumbnail}
+                    style={{
+                      backgroundImage: `url(${imageContent.urls['640x360']})`,
+                    }}
                   />
                   <div className={styles.textContainer}>
                     <span className={styles.titleText}>{ imageContent.title }</span>
@@ -180,10 +160,15 @@ export default function Home({ overallData }) {
             'material-symbols-outlined',
             distanceToTop === 0 ? styles.toTopButtonHidden : ''
           ].join(' ')}
-          onClick={handleToTopButtonClicked}
+          onClick={() => window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })}
         >
           arrow_upward
         </span>
+
+        {
+          imageViewerContent && <ImageViewer imageContent={imageViewerContent} onClose={() => setImageViewerContent(null)} />
+        }
+
       </main>
     </Layout>
   )
