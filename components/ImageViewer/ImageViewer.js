@@ -1,21 +1,33 @@
 import Head from 'next/head';
 import { saveAs } from 'file-saver';
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import styles from './ImageViewer.module.css';
 
 export default function ImageViewer({ imageContent, onClose }) {
   const backgroundImageRef = useRef(null);
   const [showDownloadList, setShowDownloadList] = useState(false);
+  const [isScreenWidthLow, setIsScreenWidthLow] = useState(false);
+  const [isDetailFolded, setIsDetailFolded] = useState(false);
+
+  const imageURLs = useMemo(() => ({
+    '640x360': `https://www.bing.com/th?id=${imageContent.id}_640x360.jpg`,
+    '1920x1080': `https://www.bing.com/th?id=${imageContent.id}_1920x1080.jpg`
+  }), [imageContent.id]);
+
+  // check screen width
+  useEffect(() => {
+    window.screen.width < 600 && setIsScreenWidthLow(true);
+  }, []);
+
 
   // load 1080p image and modify background image
   useEffect(() => {
     const backgroundImage = document.createElement('img');
     backgroundImage.onload = () => {
-      backgroundImageRef.current.style.backgroundImage = `url(${backgroundImage.src}), url(https://www.bing.com/th?id=${imageContent.id}_640x360.jpg)`;
-      backgroundImageRef.current.style.filter = 'blur(0)';
+      backgroundImageRef.current.style.backgroundImage = `url(${imageURLs['1920x1080']}), url(${imageURLs['640x360']})`;
     }
-    backgroundImage.src = `https://www.bing.com/th?id=${imageContent.id}_1920x1080.jpg`;
-  }, [imageContent]);
+    backgroundImage.src = imageURLs['1920x1080'];
+  }, [imageURLs]);
 
   function handleResolutionClicked(e) {
     const res = e.target.dataset.res;
@@ -35,7 +47,7 @@ export default function ImageViewer({ imageContent, onClose }) {
       <div
         ref={backgroundImageRef}
         className={styles.backgroundImage}
-        style={{ backgroundImage: `url(https://www.bing.com/th?id=${imageContent.id}_640x360.jpg)` }}
+        style={{ backgroundImage: `url(${imageURLs['640x360']})` }}
       />
 
       <div className={styles.buttonGroup}>
@@ -43,9 +55,12 @@ export default function ImageViewer({ imageContent, onClose }) {
         <span className={`${styles.downloadButton} material-symbols-outlined`} onClick={() => setShowDownloadList(!showDownloadList)}>file_download</span>
       </div>
 
-      <div className={styles.detailContainer}>
-        <span>{imageContent.title} {imageContent.copyright}</span>
-        <span className={styles.descriptionText}>
+      <div className={styles.detailContainer} onClick={() => isScreenWidthLow && setIsDetailFolded(!isDetailFolded)}>
+        <div className={styles.detailTitleContainer}>
+          <span>{imageContent.title} {imageContent.copyright}</span>
+          <span className={`${styles.expandDetailButton} material-symbols-outlined`}>{ isDetailFolded ? 'expand_less' : 'expand_more' }</span>
+        </div>
+        <span className={`${styles.descriptionText} ${isDetailFolded ? styles.hiddenDescriptionText : ''}`}>
           {imageContent.description}&nbsp;
           <a className={styles.knowMoreLink} href={imageContent.knowMoreURL} target="_blank" rel="noopener noreferrer">Know More</a>
         </span>

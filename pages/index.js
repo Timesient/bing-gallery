@@ -111,6 +111,8 @@ export default function Home({ globalData }) {
                     src={`${imageContent.urls[needHighResThumbnail ? '1280x720' : '640x360']}`}
                     width={360}
                     height={240}
+                    placeholder="blur"
+                    blurDataURL={`${imageContent.urls['640x360']}`}
                     alt={imageContent.id}
                   />
                   <div className={styles.textContainer}>

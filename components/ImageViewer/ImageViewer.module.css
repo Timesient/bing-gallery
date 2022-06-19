@@ -10,8 +10,6 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-
-  background-color: #000000;
 }
 
 .backgroundImage {
@@ -23,9 +21,6 @@
 
   background-size: cover;
   background-position: center center;
-
-  filter: blur(0.25rem);
-  transition: filter 0.1s ease;
 }
 
 .buttonGroup {
@@ -78,9 +73,31 @@
   z-index: inherit;
 }
 
+.detailTitleContainer {
+  display: flex;
+  align-items: center;
+}
+
+.expandDetailButton {
+  display: none;
+  align-items: center;
+  margin-left: 0.25rem;
+  padding: 0.25rem;
+}
+
 .descriptionText {
+  max-height: 75vh;
+  opacity: 1;
+  transition: all 0.4s ease-out;
+  
+  overflow: hidden;
   font-size: 0.875rem;
   color: #aaaaaa;
+}
+
+.hiddenDescriptionText {
+  max-height: 0;
+  opacity: 0;
 }
 
 .knowMoreLink {
@@ -127,4 +144,10 @@
 
 .resText:hover {
   text-decoration: underline;
+}
+
+@media screen and (max-width: 600px) {
+  .expandDetailButton {
+    display: flex;
+  }
 }
