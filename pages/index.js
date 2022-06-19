@@ -22,6 +22,7 @@ export async function getServerSideProps(context) {
 }
 
 export default function Home({ globalData }) {
+  const [needHighResThumbnail, setNeedHighResThumbnail] = useState(false);
   const [imageContents, setImageContents] = useState(null);
   const [isGlobal, setIsGlobal] = useState(true);
   const [imageViewerContent, setImageViewerContent] = useState(null);
@@ -47,6 +48,11 @@ export default function Home({ globalData }) {
   }));
 
   const selectedOption = options.filter(option => option.value === currentCountry)[0];
+  
+  // check if high resolution thumbnail is needed
+  useEffect(() => {
+    if (window.devicePixelRatio > 1 && window.screen.width * window.devicePixelRatio > 640) setNeedHighResThumbnail(true);
+  }, []);
 
   // init global data for display & load data when tab changes
   useEffect(() => {
@@ -131,11 +137,11 @@ export default function Home({ globalData }) {
                   onClick={handleCardClicked}
                   data-index={index}
                 >
-                  <div
-                    className={styles.imageThumbnail}
-                    style={{
-                      backgroundImage: `url(${imageContent.urls['640x360']})`,
-                    }}
+                  <Image
+                    src={`${imageContent.urls[needHighResThumbnail ? '1280x720' : '640x360']}`}
+                    width={360}
+                    height={240}
+                    alt={imageContent.id}
                   />
                   <div className={styles.textContainer}>
                     <span className={styles.titleText}>{ imageContent.title }</span>
