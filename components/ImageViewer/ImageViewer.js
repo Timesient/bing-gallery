@@ -1,38 +1,50 @@
 import Head from 'next/head';
 import { saveAs } from 'file-saver';
-import { useState, useRef, useEffect, useMemo } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import styles from './ImageViewer.module.css';
 
-export default function ImageViewer({ imageContent, onClose }) {
+export default function ImageViewer({ content, onClose }) {
   const backgroundImageRef = useRef(null);
   const [showDownloadList, setShowDownloadList] = useState(false);
-  const [isScreenWidthLow, setIsScreenWidthLow] = useState(false);
+  const [isLowWidthScreen, setIsLowWidthScreen] = useState(false);
   const [isDetailFolded, setIsDetailFolded] = useState(false);
-
-  const imageURLs = useMemo(() => ({
-    '640x360': `https://www.bing.com/th?id=${imageContent.id}_640x360.jpg`,
-    '1920x1080': `https://www.bing.com/th?id=${imageContent.id}_1920x1080.jpg`
-  }), [imageContent.id]);
 
   // check screen width
   useEffect(() => {
-    window.screen.width < 600 && setIsScreenWidthLow(true);
+    window.screen.width < 600 && setIsLowWidthScreen(true);
   }, []);
 
+  // disable body scroll
+  useEffect(() => {
+    document.body.style.overflowY = 'hidden';
+
+    return () => {
+      document.body.style.overflowY = 'auto';
+    }
+  }, []);
 
   // load 1080p image and modify background image
   useEffect(() => {
+    const imageURLs = {
+      '640x360': `https://www.bing.com/th?id=${content.id}_640x360.jpg`,
+      '1920x1080': `https://www.bing.com/th?id=${content.id}_1920x1080.jpg`
+    }
+
+    // initial background image
+    backgroundImageRef.current.style.backgroundImage = `url(${imageURLs['640x360']})`
+
     const backgroundImage = document.createElement('img');
     backgroundImage.onload = () => {
+      // update background image
       backgroundImageRef.current.style.backgroundImage = `url(${imageURLs['1920x1080']}), url(${imageURLs['640x360']})`;
     }
     backgroundImage.src = imageURLs['1920x1080'];
-  }, [imageURLs]);
+  }, [content.id]);
 
   function handleResolutionClicked(e) {
     const res = e.target.dataset.res;
-    const url = imageContent.urls[res];
-    saveAs(url, `${imageContent.id}_${res}.jpg`);
+    const url = content.urls[res];
+    saveAs(url, `${content.id}_${res}.jpg`);
   }
 
   return (
@@ -41,28 +53,24 @@ export default function ImageViewer({ imageContent, onClose }) {
       onClick={() => showDownloadList && setShowDownloadList(false)}
     >
       <Head>
-        <title>{'Bing Gallery' + ` - ${imageContent.title}`}</title>
+        <title>{'Bing Gallery' + ` - ${content.title}`}</title>
       </Head>
 
-      <div
-        ref={backgroundImageRef}
-        className={styles.backgroundImage}
-        style={{ backgroundImage: `url(${imageURLs['640x360']})` }}
-      />
+      <div ref={backgroundImageRef} className={styles.backgroundImage} />
 
       <div className={styles.buttonGroup}>
         <span className={`${styles.closeButton} material-symbols-outlined`} onClick={onClose}>close</span>
         <span className={`${styles.downloadButton} material-symbols-outlined`} onClick={() => setShowDownloadList(!showDownloadList)}>file_download</span>
       </div>
 
-      <div className={styles.detailContainer} onClick={() => isScreenWidthLow && setIsDetailFolded(!isDetailFolded)}>
+      <div className={styles.detailContainer} onClick={() => isLowWidthScreen && setIsDetailFolded(!isDetailFolded)}>
         <div className={styles.detailTitleContainer}>
-          <span>{imageContent.title} {imageContent.copyright}</span>
+          <span>{content.title} {content.copyright}</span>
           <span className={`${styles.expandDetailButton} material-symbols-outlined`}>{ isDetailFolded ? 'expand_less' : 'expand_more' }</span>
         </div>
         <span className={`${styles.descriptionText} ${isDetailFolded ? styles.hiddenDescriptionText : ''}`}>
-          {imageContent.description}&nbsp;
-          <a className={styles.knowMoreLink} href={imageContent.knowMoreURL} target="_blank" rel="noopener noreferrer">Know More</a>
+          {content.description}&nbsp;
+          <a className={styles.knowMoreLink} href={content.knowMoreURL} target="_blank" rel="noopener noreferrer">Know More</a>
         </span>
       </div>
 
@@ -73,7 +81,7 @@ export default function ImageViewer({ imageContent, onClose }) {
             <div className={styles.downloadList}>
               {
                 Object
-                  .keys(imageContent.urls)
+                  .keys(content.urls)
                   .filter(res => ['UHD', '1920x1080', '1366x768', '1280x768', '1024x768', '800x600', '640x480'].includes(res))
                   .map(res => (
                     <span

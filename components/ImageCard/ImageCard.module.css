@@ -1,0 +1,57 @@
+.container {
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  flex-direction: column;
+
+  border-radius: 0.25rem;
+  box-shadow: 0 1px 16px 0 rgba(0, 0, 0, 0.15);
+
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.textContainer {
+  display: flex;
+  flex-grow: 1;
+  flex-direction: column;
+  padding: 1rem;
+}
+
+.titleText {
+  height: 4rem;
+  max-height: 4rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  word-break: break-all;
+  font-weight: bold;
+}
+
+.copyrightText {
+  height: 2rem;
+  line-height: 2rem;
+  font-size: 0.875rem;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dateContainer {
+  height: 2rem;
+  display: flex;
+  align-items: center;
+}
+
+.dateIcon {
+  font-size: 0.75rem;
+}
+
+.dateText {
+  font-size: 0.875rem;
+}

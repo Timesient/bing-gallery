@@ -25,7 +25,7 @@ const globalOption = {
   label: (
     <div className={styles.option}>
       <Image
-        src={`/images/global.png`}
+        src={`/images/plane.png`}
         width={24}
         height={24}
         alt="global"
