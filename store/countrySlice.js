@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  currentCountry: 'cn'
+  currentCountry: 'global'
 };
 
 export const countrySlice = createSlice({

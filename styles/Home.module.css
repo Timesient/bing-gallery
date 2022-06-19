@@ -41,39 +41,18 @@
   align-items: center;
 }
 
-.tabSelectContainer {
+.locationSelectContainer {
   margin-left: 1rem;
-  font-size: 1.25rem;
-}
 
-.selectedTab {
-  margin-right: 1rem;
-  border-bottom: 0.125rem solid #0b64c9;
-
-  color: #0b64c9;
-  cursor: pointer;
-  user-select: none;
-}
-
-.notSelectedTab {
-  margin-right: 1rem;
-  color: #aaaaaa;
-  cursor: pointer;
-  user-select: none;
-}
-
-.select {
-  margin-left: 0.5rem;
-}
-
-.option {
   display: flex;
   align-items: center;
-  cursor: pointer;
 }
 
-.optionLabel {
-  padding-left: 0.5rem;
+.locationSelectLabel {
+  margin-right: 1rem;
+
+  font-size: 1.25rem;
+  font-weight: bold;
 }
 
 .imageContainer {

@@ -7,7 +7,7 @@ import { selectCurrentCountry, setCurrentCountry } from '../store/countrySlice';
 import { countryConfig, getCountryCodeByID } from '../lib/preset';
 import { getGlobalImageData } from '../lib/getImageData';
 import Layout from '../components/Layout/Layout';
-import Select from '../components/Select/Select';
+import CountrySelect from '../components/CountrySelect/CountrySelect';
 import ImageViewer from '../components/ImageViewer/ImageViewer';
 import styles from '../styles/Home.module.css';
 
@@ -24,30 +24,10 @@ export async function getServerSideProps(context) {
 export default function Home({ globalData }) {
   const [needHighResThumbnail, setNeedHighResThumbnail] = useState(false);
   const [imageContents, setImageContents] = useState(null);
-  const [isGlobal, setIsGlobal] = useState(true);
   const [imageViewerContent, setImageViewerContent] = useState(null);
   const [distanceToTop, setDistanceToTop] = useState(0);
   const currentCountry = useSelector(selectCurrentCountry);
   const dispatch = useDispatch();
-
-  // prepare options for country select
-  const options = Object.keys(countryConfig).map(cc => ({
-    value: cc,
-    label: (
-      <div className={styles.option}>
-        <Image
-          src={`/images/${cc}.png`}
-          width={24}
-          height={24}
-          alt={cc}
-          layout="fixed"
-        />
-        <span className={styles.optionLabel}>{countryConfig[cc].fullname}</span>
-      </div>
-    )
-  }));
-
-  const selectedOption = options.filter(option => option.value === currentCountry)[0];
   
   // check if high resolution thumbnail is needed
   useEffect(() => {
@@ -57,10 +37,10 @@ export default function Home({ globalData }) {
   // init global data for display & load data when tab changes
   useEffect(() => {
     (async () => {
-      const data = isGlobal ? globalData : await axios.get(`/api/images?mode=all&cc=${currentCountry}`).then(res => res.data.data);
+      const data = currentCountry === 'global' ? globalData : await axios.get(`/api/images?mode=all&cc=${currentCountry}`).then(res => res.data.data);
       setImageContents(data);
     })();
-  }, [isGlobal, globalData, currentCountry])
+  }, [currentCountry, globalData])
 
   // for to-top button
   useEffect(() => {
@@ -111,20 +91,10 @@ export default function Home({ globalData }) {
         </Head>
 
         <div className={styles.controlPanel}>
-          <div className={styles.tabSelectContainer}>
-            <span className={isGlobal ? styles.selectedTab : styles.notSelectedTab} onClick={() => {setIsGlobal(true)}}>Global</span>
-            <span className={isGlobal ? styles.notSelectedTab : styles.selectedTab} onClick={() => {setIsGlobal(false)}}>Country</span>
+          <div className={styles.locationSelectContainer}>
+            <span className={styles.locationSelectLabel}>Location: </span>
+            <CountrySelect onChange={handleSelectChanged} />
           </div>
-          {
-            !isGlobal && (
-              <Select
-                extraClassNames={[styles.select]}
-                options={options}
-                selectedOption={selectedOption}
-                onChange={handleSelectChanged}
-              />
-            )
-          }
         </div>
         
         <div className={styles.imageContainer}>

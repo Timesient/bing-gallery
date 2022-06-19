@@ -1,0 +1,9 @@
+.option {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.optionLabel {
+  padding-left: 0.5rem;
+}

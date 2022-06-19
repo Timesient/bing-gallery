@@ -3,6 +3,7 @@ import styles from './Select.module.css';
 
 export default function Select({extraClassNames, options, selectedOption, onChange }) {
   const [isExpand, setIsExpand] = useState(false);
+  const [currentSelectedOption, setCurrentSelectedOption] = useState(selectedOption);
   const containerRef = useRef();
 
   useEffect(() => {
@@ -27,6 +28,8 @@ export default function Select({extraClassNames, options, selectedOption, onChan
   function handleOptionClicked(e) {
     const value = e.currentTarget.dataset.value;
     onChange(value);
+
+    setCurrentSelectedOption(options.filter(option => option.value === value)[0]);
     setIsExpand(false);
   }
 
@@ -36,7 +39,7 @@ export default function Select({extraClassNames, options, selectedOption, onChan
         className={`${styles.selectedOption} ${isExpand ? styles.selectedOptionExpanded : ''}`}
         onClick={handleStartSelecting}
       >
-        <div className={styles.selectedOptionLabel}>{ selectedOption?.label }</div>
+        <div className={styles.selectedOptionLabel}>{ currentSelectedOption?.label }</div>
         <span className={`${styles.expandIcon} material-symbols-outlined`}>expand_more</span>
       </div>
       {
@@ -44,7 +47,7 @@ export default function Select({extraClassNames, options, selectedOption, onChan
           {
             options.map((option, index) =>(
               <div
-                className={styles.option}
+                className={styles.optionWrapper}
                 key={`${option.value}-${index}`}
                 data-value={option.value}
                 onClick={handleOptionClicked}
