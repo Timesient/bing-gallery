@@ -1,0 +1,60 @@
+.container {
+  display: flex;
+  align-items: center;
+
+  transform: translateY(2px);
+}
+
+.searchIcon {
+  margin-right: 0.25rem;
+  font-size: 1.75rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+.searchInputWrapper {
+  padding-bottom: 2px;
+  border-bottom: 2px solid;
+  transform: translateY(1px);
+}
+
+.searchInput {
+  display: block;
+
+  width: 14rem;
+  height: 100%;
+  padding: 0;
+  padding-left: 0.25rem;
+  padding-right: 1.5rem;
+
+  border: none;
+  outline: none;
+  overflow: hidden;
+
+  font-size: 1rem;
+  transition: width 0.4s,
+              height 0s ease 0.4s,
+              opacity 0.4s,
+              padding 0.4s;
+}
+
+.hiddenSearchInput {
+  width: 0;
+  height: 0;
+  opacity: 0;
+  padding: 0;
+}
+
+.clearIcon {
+  position: absolute;
+  top: 0;
+  right: 0;
+
+  color: #aaaaaa;
+  cursor: pointer;
+  user-select: none;
+}
+
+.clearIcon:hover {
+  color: #000000;
+}

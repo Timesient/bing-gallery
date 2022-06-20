@@ -18,5 +18,5 @@ export async function getServerSideProps(context) {
 export default function Detail({ imageContent })  {
   const router = useRouter();
 
-  return <ImageViewer imageContent={imageContent} onClose={() => router.push('/')} />
+  return <ImageViewer content={imageContent} onClose={() => router.push('/')} />
 }

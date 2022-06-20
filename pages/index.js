@@ -3,38 +3,73 @@ import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectCurrentCountry, setCurrentCountry } from '../store/countrySlice';
-
-import { getGlobalImageData } from '../lib/getImageData';
+import { getGlobalImageData, getUnmergedGlobalImageData } from '../lib/getImageData';
 import Layout from '../components/Layout/Layout';
 import CountrySelect from '../components/CountrySelect/CountrySelect';
+import Search from '../components/Search/Search';
+import ImageCard from '../components/ImageCard/ImageCard';
 import ImageViewer from '../components/ImageViewer/ImageViewer';
 import ToTopButton from '../components/ToTopButton/ToTopButton';
 import styles from '../styles/Home.module.css';
-import ImageCard from '../components/ImageCard/ImageCard';
 
 export async function getServerSideProps(context) {
   const globalData = getGlobalImageData();
+  const unmergedGlobalData = getUnmergedGlobalImageData();
 
   return {
     props: {
-      globalData
+      globalData,
+      unmergedGlobalData
     }
   }
 }
 
-export default function Home({ globalData }) {
+export default function Home({ globalData, unmergedGlobalData }) {
   const [imageContents, setImageContents] = useState(null);
   const [imageViewerContent, setImageViewerContent] = useState(null);
+  const [searchValue, setSearchValue] = useState('');
+  const [filteredImageContents, setFilteredImageContents] = useState(null);
   const currentCountry = useSelector(selectCurrentCountry);
   const dispatch = useDispatch();
-  
+
+
   // init global data for display & load data when tab changes
   useEffect(() => {
     (async () => {
       const data = currentCountry === 'global' ? globalData : await axios.get(`/api/images?mode=all&cc=${currentCountry}`).then(res => res.data.data);
       setImageContents(data);
     })();
-  }, [currentCountry, globalData])
+  }, [currentCountry, globalData]);
+
+
+  // update filtered image contents
+  useEffect(() => {
+    if (!imageContents || !unmergedGlobalData) return;
+
+    function searchFilter(contents) {
+      return contents.filter(content => {
+        const targets = [content.headline, content.title, content.copyright, content.description, content.quickFact, content.id];
+        return targets.some(target => target.toString().toLowerCase().includes(searchValue.trim().toLowerCase()))
+      });
+    }
+
+    let filteredData;
+    if (currentCountry === 'global') {
+      filteredData = Object
+        .values(unmergedGlobalData)
+        .reduce((acc, cur) => {    
+          const matchedDatasets = searchFilter(cur);
+          matchedDatasets.length !== 0 && acc.push(matchedDatasets.sort((a, b) => b.timestamp - a.timestamp)[0]);
+
+          return acc;
+        }, [])
+        .sort((a, b) => b.timestamp - a.timestamp);
+    } else {
+      filteredData = searchFilter(imageContents);
+    }
+
+    setFilteredImageContents(filteredData);
+  }, [searchValue, imageContents, currentCountry, unmergedGlobalData]);
 
   
   // handle country select changes
@@ -42,9 +77,15 @@ export default function Home({ globalData }) {
     dispatch(setCurrentCountry(value))
   }
 
+  // handle search input value changes
+  function handleSearchChanged(value) {
+    setSearchValue(value);
+  }
+
   // click card and show image viewer
-  function handleCardClicked(index) {
-    setImageViewerContent(imageContents[index]);
+  function handleCardClicked(id) {
+    const content = filteredImageContents.filter(content => content.id === id)[0];
+    setImageViewerContent(content);
   }
 
   return (
@@ -59,13 +100,17 @@ export default function Home({ globalData }) {
             <span className={styles.locationSelectLabel}>Location: </span>
             <CountrySelect onChange={handleSelectChanged} />
           </div>
+          <div className={styles.searchContainer}>
+            <Search onChange={handleSearchChanged}/>
+          </div>
         </div>
         
         <div className={styles.cardContainer}>
           {
-            imageContents && imageContents.map((content, index) => (
+            filteredImageContents &&
+            filteredImageContents.map((content, index) => (
               <div key={`${content.id}-${index}`} className={styles.imageCardWrapper}>
-                <ImageCard content={content} index={index} onClick={handleCardClicked}/>
+                <ImageCard content={content} onClick={handleCardClicked}/>
               </div>
             ))
           }
@@ -73,7 +118,16 @@ export default function Home({ globalData }) {
 
         <ToTopButton />
 
-        { imageContents && <p className={styles.bottomText}>All images are loaded.</p> }
+        {
+          filteredImageContents &&
+          <p className={styles.bottomText}>
+            {
+              filteredImageContents.length > 0
+              ? 'All images are loaded.'
+              : 'No image found.'
+            }
+          </p>
+        }
 
         { imageViewerContent && <ImageViewer content={imageViewerContent} onClose={() => setImageViewerContent(null)} /> }
 

@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { getDateString } from '../../lib/preset';
 import styles from './ImageCard.module.css';
 
-export default function ImageCard({ content, index, onClick }) {
+export default function ImageCard({ content, onClick }) {
   const [needHighResThumbnail, setNeedHighResThumbnail] = useState(false);
 
   // check if high resolution thumbnail is needed
@@ -13,7 +13,7 @@ export default function ImageCard({ content, index, onClick }) {
 
   function handleCardClicked(e) {
     e.preventDefault();
-    onClick(e.currentTarget.dataset.index);
+    onClick(content.id);
   }
 
   return (
@@ -21,7 +21,6 @@ export default function ImageCard({ content, index, onClick }) {
       href={`/detail/${content.id}`}
       className={styles.container}
       onClick={handleCardClicked}
-      data-index={index}
     >
       <Image
         src={`${content.urls[needHighResThumbnail ? '1280x720' : '640x360']}`}
