@@ -1,4 +1,5 @@
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 import { saveAs } from 'file-saver';
 import { useState, useRef, useEffect } from 'react';
 import styles from './ImageViewer.module.css';
@@ -8,6 +9,20 @@ export default function ImageViewer({ content, onClose }) {
   const [showDownloadList, setShowDownloadList] = useState(false);
   const [isLowWidthScreen, setIsLowWidthScreen] = useState(false);
   const [isDetailFolded, setIsDetailFolded] = useState(false);
+  const router = useRouter();
+
+  // handle navigator back button clicked
+  useEffect(() => {
+    function handleHashChange(e) {
+      onClose();
+    }
+
+    window.addEventListener('hashchange', handleHashChange);
+
+    return () => {
+      window.removeEventListener('hashchange', handleHashChange);
+    }
+  }, [onClose]);
 
   // check screen width
   useEffect(() => {
@@ -41,6 +56,11 @@ export default function ImageViewer({ content, onClose }) {
     backgroundImage.src = imageURLs['1920x1080'];
   }, [content.id]);
 
+  function handleCloseButtonClicked() {
+    router.back();
+    onClose();
+  }
+
   function handleResolutionClicked(e) {
     const res = e.target.dataset.res;
     const url = content.urls[res];
@@ -59,7 +79,7 @@ export default function ImageViewer({ content, onClose }) {
       <div ref={backgroundImageRef} className={styles.backgroundImage} />
 
       <div className={styles.buttonGroup}>
-        <span className={`${styles.closeButton} material-symbols-outlined`} onClick={onClose}>close</span>
+        <span className={`${styles.closeButton} material-symbols-outlined`} onClick={handleCloseButtonClicked}>close</span>
         <span className={`${styles.downloadButton} material-symbols-outlined`} onClick={() => setShowDownloadList(!showDownloadList)}>file_download</span>
       </div>
 

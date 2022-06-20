@@ -1,5 +1,6 @@
 import axios from 'axios';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectCurrentCountry, setCurrentCountry } from '../store/countrySlice';
@@ -31,6 +32,7 @@ export default function Home({ globalData, unmergedGlobalData }) {
   const [filteredImageContents, setFilteredImageContents] = useState(null);
   const currentCountry = useSelector(selectCurrentCountry);
   const dispatch = useDispatch();
+  const router = useRouter();
 
 
   // init global data for display & load data when tab changes
@@ -84,6 +86,7 @@ export default function Home({ globalData, unmergedGlobalData }) {
 
   // click card and show image viewer
   function handleCardClicked(id) {
+    router.push(`/#${id}`);
     const content = filteredImageContents.filter(content => content.id === id)[0];
     setImageViewerContent(content);
   }

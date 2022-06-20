@@ -1,15 +1,20 @@
-import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { getDateString } from '../../lib/preset';
 import styles from './ImageCard.module.css';
 
 export default function ImageCard({ content, onClick }) {
-  const [needHighResThumbnail, setNeedHighResThumbnail] = useState(false);
+  const thumbnailRef = useRef();
 
-  // check if high resolution thumbnail is needed
+  // check if higher resolution thumbnail is needed
   useEffect(() => {
-    if (window.devicePixelRatio > 1 && window.screen.width * window.devicePixelRatio > 640) setNeedHighResThumbnail(true);
-  }, []);
+    if (window.devicePixelRatio > 1 && window.screen.width * window.devicePixelRatio > 640) {
+      const higherResThumbnail = document.createElement('img');
+      higherResThumbnail.onload = () => {
+        thumbnailRef.current.style.backgroundImage = `url(${higherResThumbnail.src})`;
+      }
+      higherResThumbnail.src = content.urls['1280x720'];
+    }
+  }, [content.urls]);
 
   function handleCardClicked(e) {
     e.preventDefault();
@@ -22,14 +27,14 @@ export default function ImageCard({ content, onClick }) {
       className={styles.container}
       onClick={handleCardClicked}
     >
-      <Image
-        src={`${content.urls[needHighResThumbnail ? '1280x720' : '640x360']}`}
-        width={360}
-        height={240}
-        placeholder="blur"
-        blurDataURL={`${content.urls['640x360']}`}
-        alt={content.id}
-      />
+      <div 
+        ref={thumbnailRef}
+        className={styles.thumbnail}
+        style={{
+          backgroundImage: `url(${content.urls['640x360']})`
+        }}
+      >
+      </div>
       <div className={styles.textContainer}>
         <span className={styles.titleText}>{ content.title }</span>
         <span className={styles.copyrightText}>{ content.copyright }</span>
