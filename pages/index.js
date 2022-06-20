@@ -1,9 +1,10 @@
 import axios from 'axios';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectCurrentCountry, setCurrentCountry } from '../store/countrySlice';
+import { selectImageData, setImageData } from '../store/imageDataSlice';
 import { getGlobalImageData, getUnmergedGlobalImageData } from '../lib/getImageData';
 import Layout from '../components/Layout/Layout';
 import CountrySelect from '../components/CountrySelect/CountrySelect';
@@ -30,23 +31,32 @@ export default function Home({ globalData, unmergedGlobalData }) {
   const [imageViewerContent, setImageViewerContent] = useState(null);
   const [searchValue, setSearchValue] = useState('');
   const [filteredImageContents, setFilteredImageContents] = useState(null);
+  const [chunkCounter, setChunkCounter] = useState(0);
+  const bottomTextRef = useRef(null);
+  const storeImageData = useSelector(selectImageData);
   const currentCountry = useSelector(selectCurrentCountry);
   const dispatch = useDispatch();
   const router = useRouter();
 
 
-  // init global data for display & load data when tab changes
+  // init store with merged global data & update image contents when tab changes
   useEffect(() => {
     (async () => {
-      const data = currentCountry === 'global' ? globalData : await axios.get(`/api/images?mode=all&cc=${currentCountry}`).then(res => res.data.data);
+      let data;
+      if (currentCountry === 'global') data = globalData;
+      else data = storeImageData[currentCountry] || await axios.get(`/api/images?mode=all&cc=${currentCountry}`).then(res => res.data.data);
+      
+      if (!(currentCountry in storeImageData)) dispatch(setImageData({ key: currentCountry, value: data }));
+     
       setImageContents(data);
     })();
-  }, [currentCountry, globalData]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentCountry]);
 
 
-  // update filtered image contents
+  // update filtered image contents & reset chunkCounter
   useEffect(() => {
-    if (!imageContents || !unmergedGlobalData) return;
+    if (!imageContents) return;
 
     function searchFilter(contents) {
       return contents.filter(content => {
@@ -70,8 +80,31 @@ export default function Home({ globalData, unmergedGlobalData }) {
       filteredData = searchFilter(imageContents);
     }
 
+    setChunkCounter(0);
     setFilteredImageContents(filteredData);
-  }, [searchValue, imageContents, currentCountry, unmergedGlobalData]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchValue, imageContents]);
+
+
+  // setup intersection observer for bottom-text-element
+  useEffect(() => {
+    if (!filteredImageContents || chunkCounter * 3 >= filteredImageContents.length) return;
+
+    function observeCallback(entries) {
+      entries[0].isIntersecting && setChunkCounter(chunkCounter + 1);
+    }
+
+    const options = {
+      rootMargin: "0px 0px 0px 0px"
+    }
+
+    const io = new IntersectionObserver(observeCallback, options);
+    io.observe(bottomTextRef.current);
+
+    return () => {
+      io.disconnect();
+    }
+  }, [chunkCounter, filteredImageContents]);
 
   
   // handle country select changes
@@ -111,26 +144,25 @@ export default function Home({ globalData, unmergedGlobalData }) {
         <div className={styles.cardContainer}>
           {
             filteredImageContents &&
-            filteredImageContents.map((content, index) => (
-              <div key={`${content.id}-${index}`} className={styles.imageCardWrapper}>
-                <ImageCard content={content} onClick={handleCardClicked}/>
-              </div>
-            ))
+            filteredImageContents
+              .slice(0, chunkCounter * 3)
+              .map((content, index) => (
+                <div key={`${content.id}-${index}`} className={styles.imageCardWrapper}>
+                  <ImageCard content={content} onClick={handleCardClicked}/>
+                </div>
+              ))
           }
         </div>
 
         <ToTopButton />
 
-        {
-          filteredImageContents &&
-          <p className={styles.bottomText}>
-            {
-              filteredImageContents.length > 0
-              ? 'All images are loaded.'
-              : 'No image found.'
-            }
-          </p>
-        }
+        <p className={styles.bottomText} ref={bottomTextRef}>
+          {
+            filteredImageContents && filteredImageContents.length > 0
+            ? 'All images are loaded.'
+            : 'No image found.'
+          }
+        </p>
 
         { imageViewerContent && <ImageViewer content={imageViewerContent} onClose={() => setImageViewerContent(null)} /> }
 

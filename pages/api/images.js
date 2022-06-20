@@ -1,6 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 
-import { getLatestImageData, getRandomImageData, getAllImageData } from "../../lib/getImageData";
+import { getLatestImageData, getRandomImageData, getCountryImageData } from "../../lib/getImageData";
 import { resolutionConfig, countryConfig } from "../../lib/preset";
 
 export default async function handler(req, res) {
@@ -69,7 +69,7 @@ export default async function handler(req, res) {
 
   // handle mode all
   if (mode === 'all') {
-    const data = getAllImageData(cc);
+    const data = getCountryImageData(cc);
     res.status(200).json({ data });
   }
 }

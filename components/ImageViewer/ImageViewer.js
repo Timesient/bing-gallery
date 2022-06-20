@@ -24,10 +24,12 @@ export default function ImageViewer({ content, onClose }) {
     }
   }, [onClose]);
 
+
   // check screen width
   useEffect(() => {
     window.screen.width < 600 && setIsLowWidthScreen(true);
   }, []);
+
 
   // disable body scroll
   useEffect(() => {
@@ -37,6 +39,7 @@ export default function ImageViewer({ content, onClose }) {
       document.body.style.overflowY = 'auto';
     }
   }, []);
+  
 
   // load 1080p image and modify background image
   useEffect(() => {
@@ -51,6 +54,7 @@ export default function ImageViewer({ content, onClose }) {
     const backgroundImage = document.createElement('img');
     backgroundImage.onload = () => {
       // update background image
+      if (!backgroundImageRef.current) return;
       backgroundImageRef.current.style.backgroundImage = `url(${imageURLs['1920x1080']}), url(${imageURLs['640x360']})`;
     }
     backgroundImage.src = imageURLs['1920x1080'];
