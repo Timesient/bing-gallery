@@ -9,7 +9,7 @@ import { getGlobalImageData, getUnmergedGlobalImageData } from '../lib/getImageD
 import Layout from '../components/Layout/Layout';
 import CountrySelect from '../components/CountrySelect/CountrySelect';
 import Search from '../components/Search/Search';
-import ImageCard from '../components/ImageCard/ImageCard';
+import ImageCardContainer from '../components/ImageCardContainer/ImageCardContainer';
 import ImageViewer from '../components/ImageViewer/ImageViewer';
 import ToTopButton from '../components/ToTopButton/ToTopButton';
 import styles from '../styles/Home.module.css';
@@ -28,11 +28,9 @@ export async function getServerSideProps(context) {
 
 export default function Home({ globalData, unmergedGlobalData }) {
   const [imageContents, setImageContents] = useState(null);
-  const [imageViewerContent, setImageViewerContent] = useState(null);
   const [searchValue, setSearchValue] = useState('');
   const [filteredImageContents, setFilteredImageContents] = useState(null);
-  const [chunkCounter, setChunkCounter] = useState(0);
-  const bottomTextRef = useRef(null);
+  const [imageViewerContent, setImageViewerContent] = useState(null);
   const storeImageData = useSelector(selectImageData);
   const currentCountry = useSelector(selectCurrentCountry);
   const dispatch = useDispatch();
@@ -54,7 +52,7 @@ export default function Home({ globalData, unmergedGlobalData }) {
   }, [currentCountry]);
 
 
-  // update filtered image contents & reset chunkCounter
+  // update filtered image contents
   useEffect(() => {
     if (!imageContents) return;
 
@@ -80,31 +78,9 @@ export default function Home({ globalData, unmergedGlobalData }) {
       filteredData = searchFilter(imageContents);
     }
 
-    setChunkCounter(0);
     setFilteredImageContents(filteredData);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchValue, imageContents]);
-
-
-  // setup intersection observer for bottom-text-element
-  useEffect(() => {
-    if (!filteredImageContents || chunkCounter * 3 >= filteredImageContents.length) return;
-
-    function observeCallback(entries) {
-      entries[0].isIntersecting && setChunkCounter(chunkCounter + 1);
-    }
-
-    const options = {
-      rootMargin: "0px 0px 0px 0px"
-    }
-
-    const io = new IntersectionObserver(observeCallback, options);
-    io.observe(bottomTextRef.current);
-
-    return () => {
-      io.disconnect();
-    }
-  }, [chunkCounter, filteredImageContents]);
 
   
   // handle country select changes
@@ -141,28 +117,12 @@ export default function Home({ globalData, unmergedGlobalData }) {
           </div>
         </div>
         
-        <div className={styles.cardContainer}>
-          {
-            filteredImageContents &&
-            filteredImageContents
-              .slice(0, chunkCounter * 3)
-              .map((content, index) => (
-                <div key={`${content.id}-${index}`} className={styles.imageCardWrapper}>
-                  <ImageCard content={content} onClick={handleCardClicked}/>
-                </div>
-              ))
-          }
-        </div>
+        <ImageCardContainer
+          contents={filteredImageContents}
+          handleCardClicked={handleCardClicked}
+        />
 
         <ToTopButton />
-
-        <p className={styles.bottomText} ref={bottomTextRef}>
-          {
-            filteredImageContents && filteredImageContents.length > 0
-            ? 'All images are loaded.'
-            : 'No image found.'
-          }
-        </p>
 
         { imageViewerContent && <ImageViewer content={imageViewerContent} onClose={() => setImageViewerContent(null)} /> }
 

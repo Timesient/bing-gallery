@@ -60,6 +60,7 @@ export default function ImageViewer({ content, onClose }) {
     backgroundImage.src = imageURLs['1920x1080'];
   }, [content.id]);
 
+  
   function handleCloseButtonClicked() {
     router.back();
     onClose();
