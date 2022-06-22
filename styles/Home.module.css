@@ -54,17 +54,7 @@
   }
 }
 
-@media screen and (max-width: 900px) {
-  .imageCardWrapper {
-    width: 50%;
-  }
-}
-
 @media screen and (max-width: 600px) {
-  .imageCardWrapper {
-    width: 100%;
-  }
-
   .searchContainer {
     display: none;
   }

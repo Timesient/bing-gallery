@@ -10,6 +10,7 @@ export default function ImageCard({ content, onClick }) {
     if (window.devicePixelRatio > 1 && window.screen.width * window.devicePixelRatio > 640) {
       const higherResThumbnail = document.createElement('img');
       higherResThumbnail.onload = () => {
+        if (!thumbnailRef.current) return;
         thumbnailRef.current.style.backgroundImage = `url(${higherResThumbnail.src})`;
       }
       higherResThumbnail.src = content.urls['1280x720'];
