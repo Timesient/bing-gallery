@@ -33,3 +33,7 @@ yarn-error.log*
 
 # db
 /db/*.json
+
+# sitemap & robots.txt
+/public/sitemap.xml
+/public/robots.txt
