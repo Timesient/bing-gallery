@@ -3,13 +3,13 @@ import ImageCard from '../ImageCard/ImageCard';
 import styles from './ImageCardContainer.module.css';
 
 export default function ImageCardContainer({ contents, handleCardClicked }) {
-  const [chunkCounter, setChunkCounter] = useState(0);
+  const [chunkCounter, setChunkCounter] = useState(2);
   const bottomTextRef = useRef(null);
 
 
   // reset chunk counter when contents changes
   useEffect(() => {
-    setChunkCounter(0);
+    setChunkCounter(2);
   }, [contents])
 
 

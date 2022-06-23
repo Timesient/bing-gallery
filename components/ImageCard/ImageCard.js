@@ -1,21 +1,34 @@
-import { useEffect, useRef } from 'react';
+import { useCallback } from 'react';
 import { getDateString } from '../../lib/preset';
 import styles from './ImageCard.module.css';
 
 export default function ImageCard({ content, onClick }) {
-  const thumbnailRef = useRef();
+  const thumbnailRef = useCallback(node => {
+    if (!node) return;
 
-  // check if higher resolution thumbnail is needed
-  useEffect(() => {
-    if (window.devicePixelRatio > 1 && window.screen.width * window.devicePixelRatio > 640) {
-      const higherResThumbnail = document.createElement('img');
-      higherResThumbnail.onload = () => {
-        if (!thumbnailRef.current) return;
-        thumbnailRef.current.style.backgroundImage = `url(${higherResThumbnail.src})`;
-      }
-      higherResThumbnail.src = content.urls['1280x720'];
+    const id = node.dataset.id;
+    const isHighResScreen = window.devicePixelRatio > 1 && window.screen.width * window.devicePixelRatio > 640;
+    const defaultThumbnailURL = `https://www.bing.com/th?id=${id}_640x360.jpg`;
+    const highResThumbnailURL = `https://www.bing.com/th?id=${id}_1280x720.jpg`;
+
+    const promises = [loadImage(defaultThumbnailURL)];
+    isHighResScreen && promises.push(loadImage(highResThumbnailURL));
+
+    Promise
+      .all(promises)
+      .then(() => {
+        node.style.backgroundImage = `url(${isHighResScreen ? highResThumbnailURL : defaultThumbnailURL})`;
+        node.style.opacity = 1;
+      });
+
+    function loadImage(url) {
+      return new Promise(resolve => {
+        const img = document.createElement('img');
+        img.onload = resolve;
+        img.src = url;
+      });
     }
-  }, [content.urls]);
+  }, []);
 
   function handleCardClicked(e) {
     e.preventDefault();
@@ -31,11 +44,8 @@ export default function ImageCard({ content, onClick }) {
       <div 
         ref={thumbnailRef}
         className={styles.thumbnail}
-        style={{
-          backgroundImage: `url(${content.urls['640x360']})`
-        }}
-      >
-      </div>
+        data-id={content.id}
+      />
       <div className={styles.textContainer}>
         <span className={styles.titleText}>{ content.title }</span>
         <span className={styles.copyrightText}>{ content.copyright }</span>
