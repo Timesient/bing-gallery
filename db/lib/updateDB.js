@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const axios = require('axios');
 const schedule = require('node-schedule');
-const { resolutionConfig, countryConfig } = require('./preset');
+const { countryConfig } = require('./preset');
 
 /**
  * * get image data from bing official api
@@ -72,9 +72,10 @@ function readData(countryCode) {
 async function updateData(countryCode) {
   const recentImageData = await getImageData(countryCode);
   const dbData = readData(countryCode);
+  const timestamps = Object.values(dbData).map(dataset => String(dataset.timestamp));
 
   recentImageData.forEach(newData => {
-    if (!(newData.id in dbData)) {
+    if (!(newData.id in dbData) && !timestamps.includes(String(newData.timestamp))) {
       dbData[newData.id] = newData;
       console.log(`${countryCode}.json updated contents with id: ${newData.id}`);
     }
