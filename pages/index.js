@@ -1,11 +1,11 @@
 import axios from 'axios';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectCurrentCountry, setCurrentCountry } from '../store/countrySlice';
 import { selectImageData, setImageData } from '../store/imageDataSlice';
-import { getGlobalImageData, getUnmergedGlobalImageData } from '../lib/getImageData';
+import { getGlobalImageData } from '../lib/getImageData';
 import Layout from '../components/Layout/Layout';
 import CountrySelect from '../components/CountrySelect/CountrySelect';
 import Search from '../components/Search/Search';
@@ -14,20 +14,18 @@ import ImageViewer from '../components/ImageViewer/ImageViewer';
 import ToTopButton from '../components/ToTopButton/ToTopButton';
 import styles from '../styles/Home.module.css';
 
-export async function getServerSideProps(context) {
-  const globalData = getGlobalImageData();
-  const unmergedGlobalData = getUnmergedGlobalImageData();
+export async function getStaticProps(context) {
+  const globalDataSlice = getGlobalImageData().slice(0, 9);
 
   return {
     props: {
-      globalData,
-      unmergedGlobalData
-    }
+      globalDataSlice,
+    },
+    revalidate: 60 // 60 seconds
   }
 }
 
-export default function Home({ globalData, unmergedGlobalData }) {
-  const [imageContents, setImageContents] = useState(null);
+export default function Home({ globalDataSlice }) {
   const [searchValue, setSearchValue] = useState('');
   const [filteredImageContents, setFilteredImageContents] = useState(null);
   const [imageViewerContent, setImageViewerContent] = useState(null);
@@ -37,50 +35,49 @@ export default function Home({ globalData, unmergedGlobalData }) {
   const router = useRouter();
 
 
-  // init store with merged global data & update image contents when tab changes
+  // init & update filtered image contents
   useEffect(() => {
     (async () => {
-      let data;
-      if (currentCountry === 'global') data = globalData;
-      else data = storeImageData[currentCountry] || await axios.get(`/api/images?mode=all&cc=${currentCountry}`).then(res => res.data.data);
-      
-      if (!(currentCountry in storeImageData)) dispatch(setImageData({ key: currentCountry, value: data }));
-     
-      setImageContents(data);
+      let filteredData;
+
+      if (currentCountry === 'global') {
+        let unmergedGlobalData = storeImageData['global-unmerged'];
+        if (!unmergedGlobalData) {
+          unmergedGlobalData = await axios.get(`/api/unmergedGlobalData`).then(res => res.data.data);
+          dispatch(setImageData({ key: 'global-unmerged', value: unmergedGlobalData }));
+        }
+
+        filteredData = Object
+          .values(unmergedGlobalData)
+          .reduce((acc, cur) => {
+            const matchedDatasets = searchFilter(cur);
+            matchedDatasets.length !== 0 && acc.push(matchedDatasets.sort((a, b) => b.timestamp - a.timestamp)[0]);
+
+            return acc;
+          }, [])
+          .sort((a, b) => b.timestamp - a.timestamp);
+      } else {
+        let countryData = storeImageData[currentCountry];
+        if (!countryData) {
+          countryData = await axios.get(`/api/images?mode=all&cc=${currentCountry}`).then(res => res.data.data);
+          dispatch(setImageData({ key: currentCountry, value: countryData }));
+        }
+
+        filteredData = searchFilter(countryData);
+      }
+
+      setFilteredImageContents(filteredData);
     })();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentCountry]);
 
-
-  // update filtered image contents
-  useEffect(() => {
-    if (!imageContents) return;
-
+    // filter by search value
     function searchFilter(contents) {
       return contents.filter(content => {
         const targets = [content.headline, content.title, content.copyright, content.description, content.quickFact, content.id];
         return targets.some(target => target.toString().toLowerCase().includes(searchValue.trim().toLowerCase()))
       });
     }
-
-    let filteredData;
-    if (currentCountry === 'global') {
-      filteredData = Object
-        .values(unmergedGlobalData)
-        .reduce((acc, cur) => {    
-          const matchedDatasets = searchFilter(cur);
-          matchedDatasets.length !== 0 && acc.push(matchedDatasets.sort((a, b) => b.timestamp - a.timestamp)[0]);
-
-          return acc;
-        }, [])
-        .sort((a, b) => b.timestamp - a.timestamp);
-    } else {
-      filteredData = searchFilter(imageContents);
-    }
-
-    setFilteredImageContents(filteredData);
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchValue, imageContents]);
+  }, [currentCountry, searchValue]);
 
   
   // handle country select changes
@@ -118,7 +115,7 @@ export default function Home({ globalData, unmergedGlobalData }) {
         </div>
         
         <ImageCardContainer
-          contents={filteredImageContents}
+          contents={filteredImageContents || globalDataSlice}
           handleCardClicked={handleCardClicked}
         />
 
