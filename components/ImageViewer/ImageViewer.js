@@ -68,7 +68,7 @@ export default function ImageViewer({ content, onClose }) {
 
   function handleResolutionClicked(e) {
     const res = e.target.dataset.res;
-    const url = content.urls[res];
+    const url = `https://www.bing.com/th?id=${content.id}_${res}.jpg`
     saveAs(url, `${content.id}_${res}.jpg`);
   }
 
@@ -105,19 +105,16 @@ export default function ImageViewer({ content, onClose }) {
             <span>Resolution:</span>
             <div className={styles.downloadList}>
               {
-                Object
-                  .keys(content.urls)
-                  .filter(res => ['UHD', '1920x1080', '1366x768', '1280x768', '1024x768', '800x600', '640x480'].includes(res))
-                  .map(res => (
-                    <span
-                      key={res}
-                      data-res={res}
-                      className={styles.resText}
-                      onClick={handleResolutionClicked}
-                    >
-                      { res === 'UHD' ? '4K UHD' : res }
-                    </span>
-                  ))
+                ['UHD', '1920x1080', '1366x768', '1280x768', '1024x768', '800x600', '640x480'].map(res => (
+                  <span
+                    key={res}
+                    data-res={res}
+                    className={styles.resText}
+                    onClick={handleResolutionClicked}
+                  >
+                    { res === 'UHD' ? '4K UHD' : res }
+                  </span>
+                ))
               }
             </div>
           </div>

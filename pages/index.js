@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectCurrentCountry, setCurrentCountry } from '../store/countrySlice';
 import { selectImageData, setImageData } from '../store/imageDataSlice';
-import { getGlobalImageData } from '../lib/getImageData';
+import { getGlobalDataSlice } from '../lib/getImageData';
 import Layout from '../components/Layout/Layout';
 import CountrySelect from '../components/CountrySelect/CountrySelect';
 import Search from '../components/Search/Search';
@@ -15,7 +15,7 @@ import ToTopButton from '../components/ToTopButton/ToTopButton';
 import styles from '../styles/Home.module.css';
 
 export async function getStaticProps(context) {
-  const globalDataSlice = getGlobalImageData().slice(0, 9);
+  const globalDataSlice = getGlobalDataSlice();
 
   return {
     props: {
@@ -34,21 +34,20 @@ export default function Home({ globalDataSlice }) {
   const dispatch = useDispatch();
   const router = useRouter();
 
-
   // init & update filtered image contents
   useEffect(() => {
     (async () => {
       let filteredData;
 
       if (currentCountry === 'global') {
-        let unmergedGlobalData = storeImageData['global-unmerged'];
-        if (!unmergedGlobalData) {
-          unmergedGlobalData = await axios.get(`/api/unmergedGlobalData`).then(res => res.data.data);
-          dispatch(setImageData({ key: 'global-unmerged', value: unmergedGlobalData }));
+        let globalData = storeImageData['global'];
+        if (!globalData) {
+          globalData = await axios.get(`/api/globalData`).then(res => res.data.data);
+          dispatch(setImageData({ key: 'global', value: globalData }));
         }
 
         filteredData = Object
-          .values(unmergedGlobalData)
+          .values(globalData)
           .reduce((acc, cur) => {
             const matchedDatasets = searchFilter(cur);
             matchedDatasets.length !== 0 && acc.push(matchedDatasets.sort((a, b) => b.timestamp - a.timestamp)[0]);
@@ -59,7 +58,7 @@ export default function Home({ globalDataSlice }) {
       } else {
         let countryData = storeImageData[currentCountry];
         if (!countryData) {
-          countryData = await axios.get(`/api/images?mode=all&cc=${currentCountry}`).then(res => res.data.data);
+          countryData = await axios.get(`/api/countryData?cc=${currentCountry}`).then(res => res.data.data);
           dispatch(setImageData({ key: currentCountry, value: countryData }));
         }
 
