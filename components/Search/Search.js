@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import styles from './Search.module.css';
+import MaterialIcon from '../MaterialIcon/MaterialIcon';
 
 export default function Search({ onChange }) {
   const [value, setValue] = useState('');
@@ -39,12 +40,13 @@ export default function Search({ onChange }) {
   
   return (
     <div className={styles.container} ref={containerRef}>
-      <span
-        className={`${styles.searchIcon} material-symbols-outlined`}
+      <MaterialIcon
+        className={styles.searchIcon}
+        size="28"
         onClick={handleSearchIconClicked}
       >
         search
-      </span>
+      </MaterialIcon>
       <div className={styles.searchInputWrapper}>
         <input
           className={`${styles.searchInput} ${isExpand ? '' : styles.hiddenSearchInput}`}
@@ -57,12 +59,12 @@ export default function Search({ onChange }) {
       </div>
       { 
         isExpand && 
-        <span 
-          className={`${styles.clearIcon} material-symbols-outlined`}
+        <MaterialIcon 
+          className={styles.clearIcon}
           onClick={handleClearIconClicked}
         >
           close
-        </span> 
+        </MaterialIcon> 
       } 
     </div>
   )

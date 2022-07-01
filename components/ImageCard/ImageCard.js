@@ -1,5 +1,6 @@
 import { useCallback } from 'react';
 import { getDateString } from '../../lib/preset';
+import MaterialIcon from '../MaterialIcon/MaterialIcon';
 import styles from './ImageCard.module.css';
 
 export default function ImageCard({ content, onClick }) {
@@ -50,7 +51,7 @@ export default function ImageCard({ content, onClick }) {
         <span className={styles.titleText}>{ content.title }</span>
         <span className={styles.copyrightText}>{ content.copyright }</span>
         <div className={styles.dateContainer}>
-          <span className={`${styles.dateIcon} material-symbols-outlined`}>calendar_month</span>
+          <MaterialIcon size="12">calendar_month</MaterialIcon>
           &nbsp;
           <span className={styles.dateText}>{getDateString(content.id, content.timestamp)}</span>
         </div>

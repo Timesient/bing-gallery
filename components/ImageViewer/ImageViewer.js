@@ -2,6 +2,7 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { saveAs } from 'file-saver';
 import { useState, useRef, useEffect } from 'react';
+import MaterialIcon from '../MaterialIcon/MaterialIcon';
 import styles from './ImageViewer.module.css';
 
 export default function ImageViewer({ content, onClose }) {
@@ -84,14 +85,20 @@ export default function ImageViewer({ content, onClose }) {
       <div ref={backgroundImageRef} className={styles.backgroundImage} />
 
       <div className={styles.buttonGroup}>
-        <span className={`${styles.closeButton} material-symbols-outlined`} onClick={handleCloseButtonClicked}>close</span>
-        <span className={`${styles.downloadButton} material-symbols-outlined`} onClick={() => setShowDownloadList(!showDownloadList)}>file_download</span>
+        <div className={styles.closeButton} onClick={handleCloseButtonClicked}>
+          <MaterialIcon>close</MaterialIcon>
+        </div>
+        <div className={styles.downloadButton} onClick={() => setShowDownloadList(!showDownloadList)}>
+          <MaterialIcon>file_download</MaterialIcon>
+        </div>
       </div>
 
       <div className={styles.detailContainer} onClick={() => isLowWidthScreen && setIsDetailFolded(!isDetailFolded)}>
         <div className={styles.detailTitleContainer}>
           <span>{content.title} {content.copyright}</span>
-          <span className={`${styles.expandDetailButton} material-symbols-outlined`}>{ isDetailFolded ? 'expand_less' : 'expand_more' }</span>
+          <span className={styles.expandDetailButton}>
+            <MaterialIcon>{ isDetailFolded ? 'expand_less' : 'expand_more' }</MaterialIcon>
+          </span>
         </div>
         <span className={`${styles.descriptionText} ${isDetailFolded ? styles.hiddenDescriptionText : ''}`}>
           {content.description}&nbsp;

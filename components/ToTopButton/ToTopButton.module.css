@@ -12,6 +12,7 @@
   border-radius: 100%;
   color: #ffffff;
   cursor: pointer;
+  user-select: none;
   background-color: #3385e4;
 
   transition: transform 0.2s;

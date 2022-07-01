@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import MaterialIcon from '../MaterialIcon/MaterialIcon';
 import styles from './Select.module.css';
 
 export default function Select({extraClassNames, options, selectedOption, onChange }) {
@@ -40,7 +41,7 @@ export default function Select({extraClassNames, options, selectedOption, onChan
         onClick={handleStartSelecting}
       >
         <div className={styles.selectedOptionLabel}>{ currentSelectedOption?.label }</div>
-        <span className={`${styles.expandIcon} material-symbols-outlined`}>expand_more</span>
+        <MaterialIcon className={styles.expandIcon}>expand_more</MaterialIcon>
       </div>
       {
         <div className={`${styles.optionList} ${isExpand ? '' : styles.optionListHidden}`}>
