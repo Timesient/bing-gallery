@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-import MaterialIcon from '../MaterialIcon/MaterialIcon';
+import OcticonWrapper from '../OcticonWrapper/OcticonWrapper';
+import { ChevronDownIcon } from '@primer/octicons-react'
 import styles from './Select.module.css';
 
 export default function Select({extraClassNames, options, selectedOption, onChange }) {
@@ -41,7 +42,12 @@ export default function Select({extraClassNames, options, selectedOption, onChan
         onClick={handleStartSelecting}
       >
         <div className={styles.selectedOptionLabel}>{ currentSelectedOption?.label }</div>
-        <MaterialIcon className={styles.expandIcon}>expand_more</MaterialIcon>
+        <OcticonWrapper
+          className={styles.expandIcon}
+          Icon={ChevronDownIcon}
+          size={18}
+          fill="#333"
+        />
       </div>
       {
         <div className={`${styles.optionList} ${isExpand ? '' : styles.optionListHidden}`}>

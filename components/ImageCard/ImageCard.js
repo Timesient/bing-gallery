@@ -1,6 +1,7 @@
 import { useCallback } from 'react';
 import { getDateString } from '../../lib/preset';
-import MaterialIcon from '../MaterialIcon/MaterialIcon';
+import OcticonWrapper from '../OcticonWrapper/OcticonWrapper';
+import { CalendarIcon } from '@primer/octicons-react'
 import styles from './ImageCard.module.css';
 
 export default function ImageCard({ content, onClick }) {
@@ -51,7 +52,12 @@ export default function ImageCard({ content, onClick }) {
         <span className={styles.titleText}>{ content.title }</span>
         <span className={styles.copyrightText}>{ content.copyright }</span>
         <div className={styles.dateContainer}>
-          <MaterialIcon size="12">calendar_month</MaterialIcon>
+          <OcticonWrapper
+            className={styles.calendarIcon}
+            Icon={CalendarIcon}
+            size={10}
+            fill="#333"
+          />
           &nbsp;
           <span className={styles.dateText}>{getDateString(content.id, content.timestamp)}</span>
         </div>

@@ -28,7 +28,9 @@
 }
 
 .expandIcon {
-  margin-left: 0.5rem;
+  margin-right: 2px;
+  display: flex;
+  transform: translateY(-1px);
   user-select: none;
 }
 

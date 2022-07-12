@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import styles from './Search.module.css';
-import MaterialIcon from '../MaterialIcon/MaterialIcon';
+import OcticonWrapper from '../OcticonWrapper/OcticonWrapper';
+import { SearchIcon, XIcon } from '@primer/octicons-react'
 
 export default function Search({ onChange }) {
   const [value, setValue] = useState('');
@@ -40,13 +41,13 @@ export default function Search({ onChange }) {
   
   return (
     <div className={styles.container} ref={containerRef}>
-      <MaterialIcon
+      <OcticonWrapper
         className={styles.searchIcon}
-        size="28"
+        Icon={SearchIcon}
+        size={24}
+        fill="#333"
         onClick={handleSearchIconClicked}
-      >
-        search
-      </MaterialIcon>
+      />
       <div className={styles.searchInputWrapper}>
         <input
           className={`${styles.searchInput} ${isExpand ? '' : styles.hiddenSearchInput}`}
@@ -59,12 +60,14 @@ export default function Search({ onChange }) {
       </div>
       { 
         isExpand && 
-        <MaterialIcon 
+        <OcticonWrapper
           className={styles.clearIcon}
+          Icon={XIcon}
+          size={24}
+          fill="#aaa"
+          fillOnHover="#333"
           onClick={handleClearIconClicked}
-        >
-          close
-        </MaterialIcon> 
+        />
       } 
     </div>
   )

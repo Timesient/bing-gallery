@@ -51,6 +51,11 @@
   white-space: nowrap;
 }
 
+.calendarIcon {
+  display: flex;
+  transform: translateX(0.5px);
+}
+
 .dateContainer {
   height: 2rem;
   display: flex;

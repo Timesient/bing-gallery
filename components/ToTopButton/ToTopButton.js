@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import MaterialIcon from '../MaterialIcon/MaterialIcon';
+import OcticonWrapper from '../OcticonWrapper/OcticonWrapper';
+import { ArrowUpIcon } from '@primer/octicons-react'
 import styles from './ToTopButton.module.css';
 
 export default function ToTopButton() {
@@ -19,8 +20,15 @@ export default function ToTopButton() {
   }, []);
 
   return (
-    <div className={`${styles.toTopButton} ${distanceToTop === 0 ? styles.toTopButtonHidden : ''}`}>
-      <MaterialIcon onClick={() => window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })}>arrow_upward</MaterialIcon>
+    <div
+      className={`${styles.toTopButton} ${distanceToTop === 0 ? styles.toTopButtonHidden : ''}`}
+      onClick={() => window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })}
+    >
+      <OcticonWrapper
+        Icon={ArrowUpIcon}
+        size={20}
+        fill="#FFF"
+      />
     </div>
   )
 }

@@ -2,7 +2,8 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { saveAs } from 'file-saver';
 import { useState, useRef, useEffect } from 'react';
-import MaterialIcon from '../MaterialIcon/MaterialIcon';
+import OcticonWrapper from '../OcticonWrapper/OcticonWrapper';
+import { XIcon, DownloadIcon, ChevronDownIcon, ChevronUpIcon } from '@primer/octicons-react'
 import styles from './ImageViewer.module.css';
 
 export default function ImageViewer({ content, onClose }) {
@@ -86,10 +87,18 @@ export default function ImageViewer({ content, onClose }) {
 
       <div className={styles.buttonGroup}>
         <div className={styles.closeButton} onClick={handleCloseButtonClicked}>
-          <MaterialIcon>close</MaterialIcon>
+          <OcticonWrapper
+            Icon={XIcon}
+            size={24}
+            fill="#FFF"
+          />
         </div>
         <div className={styles.downloadButton} onClick={() => setShowDownloadList(!showDownloadList)}>
-          <MaterialIcon>file_download</MaterialIcon>
+          <OcticonWrapper
+            Icon={DownloadIcon}
+            size={22}
+            fill="#FFF"
+          />
         </div>
       </div>
 
@@ -97,7 +106,11 @@ export default function ImageViewer({ content, onClose }) {
         <div className={styles.detailTitleContainer}>
           <span>{content.title} {content.copyright}</span>
           <span className={styles.expandDetailButton}>
-            <MaterialIcon>{ isDetailFolded ? 'expand_less' : 'expand_more' }</MaterialIcon>
+            <OcticonWrapper
+              Icon={isDetailFolded ? ChevronUpIcon : ChevronDownIcon}
+              size={24}
+              fill="#FFF"
+            />
           </span>
         </div>
         <span className={`${styles.descriptionText} ${isDetailFolded ? styles.hiddenDescriptionText : ''}`}>
