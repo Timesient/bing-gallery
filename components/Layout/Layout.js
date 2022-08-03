@@ -13,17 +13,16 @@ export default function Layout({ location, children }) {
 
       <header className={styles.header}>
         <div className={styles.headerContentWrapper}>
-          <div className={styles.logoContainer}>
-            <Image
-              src='/images/favicon.png'
-              width={48}
-              height={48}
-              alt="logo"
-            />
-          </div>
-
           <Link href="/">
-            <a className={styles.headerLabel}>Bing Gallery</a>
+            <div className={styles.headerWrapper}>
+              <Image
+                src='/images/favicon.png'
+                width={48}
+                height={48}
+                alt="logo"
+              />
+              <a className={styles.headerLabel}>Bing Gallery</a>
+            </div>
           </Link>
 
           <div className={styles.menu}>

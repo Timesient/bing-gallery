@@ -11,19 +11,16 @@
   padding: 0 1rem;
 }
 
-.logoContainer {
+.headerWrapper {
   display: flex;
   align-items: center;
+  cursor: pointer;
 }
 
 .headerLabel {
-  padding-left: 1rem;
+  margin-left: 1rem;
   color: #ffffff;
   font-size: 1.25rem;
-}
-
-.headerLabel:hover {
-  text-decoration: underline;
 }
 
 .menu {

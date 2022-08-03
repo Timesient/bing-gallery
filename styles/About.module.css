@@ -10,13 +10,18 @@
 }
 
 .title {
-  margin-bottom: 1rem;
   font-weight: bold;
   font-size: 1.5rem;
+  color: #2289ff;
+}
+
+.sectionTitle {
+  margin-top: 1.5rem;
+  font-weight: bold;
 }
 
 .list {
-  margin-top: 0.25rem;
+  margin: 0.5rem 0;
 }
 
 .link {
@@ -25,25 +30,16 @@
   word-break: break-all;
 }
 
-.sectionTitle {
-  font-weight: bold;
-}
-
-.requiredLabel {
-  font-weight: bold;
-}
-
-.codeBlock {
-  margin-top: 0.25rem;
-  padding: 1rem;
+.codeLine {
+  margin: 0.25rem 0;
+  padding: 0.75rem;
+  overflow-x: auto;
 
   font-family: var(--font-mono);
   font-size: 0.875rem;
-  font-weight: normal;
+  white-space: nowrap;
 
-  overflow-x: auto;
-
-  background-color: #ddf0ff;
+  background-color: aliceblue;
   border-radius: 0.25rem;
 }
 
