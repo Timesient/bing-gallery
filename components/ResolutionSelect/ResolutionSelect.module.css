@@ -1,0 +1,9 @@
+.option {
+  width: 6rem;
+
+  display: flex;
+  align-items: center;
+
+  cursor: pointer;
+  color: #0b64c9;
+}

@@ -1,7 +1,6 @@
 import Head from 'next/head';
 import Layout from '../components/Layout/Layout';
 import styles from '../styles/About.module.css';
-import { useEffect, useState } from 'react';
 
 export default function About() {
   return (

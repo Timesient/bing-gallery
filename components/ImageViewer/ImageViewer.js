@@ -27,9 +27,19 @@ export default function ImageViewer({ content, onClose }) {
   }, [onClose]);
 
 
-  // check screen width
+  // handle screen width change
   useEffect(() => {
-    window.screen.width < 600 && setIsLowWidthScreen(true);
+    document.body.clientWidth < 600 && setIsLowWidthScreen(true);
+
+    function handleScreenWidthChange() {
+      setIsLowWidthScreen(document.body.clientWidth < 600);
+    }
+
+    window.addEventListener('resize', handleScreenWidthChange);
+
+    return () => {
+      window.removeEventListener('resize', handleScreenWidthChange);
+    }
   }, []);
 
 

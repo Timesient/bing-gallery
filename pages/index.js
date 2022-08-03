@@ -3,6 +3,7 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { DesktopDownloadIcon } from '@primer/octicons-react';
 import { selectCurrentCountry, setCurrentCountry } from '../store/countrySlice';
 import { selectImageData, setImageData } from '../store/imageDataSlice';
 import { getGlobalDataSlice } from '../lib/getImageData';
@@ -11,7 +12,9 @@ import CountrySelect from '../components/CountrySelect/CountrySelect';
 import Search from '../components/Search/Search';
 import ImageCardContainer from '../components/ImageCardContainer/ImageCardContainer';
 import ImageViewer from '../components/ImageViewer/ImageViewer';
+import DownloadPanel from '../components/DownloadPanel/DownloadPanel';
 import ToTopButton from '../components/ToTopButton/ToTopButton';
+import OcticonWrapper from '../components/OcticonWrapper/OcticonWrapper';
 import styles from '../styles/Home.module.css';
 
 export async function getStaticProps(context) {
@@ -29,10 +32,17 @@ export default function Home({ globalDataSlice }) {
   const [searchValue, setSearchValue] = useState('');
   const [filteredImageContents, setFilteredImageContents] = useState(null);
   const [imageViewerContent, setImageViewerContent] = useState(null);
+  const [isShowingDownloadPanel, setIsShowingDownloadPanel] = useState(false);
   const storeImageData = useSelector(selectImageData);
   const currentCountry = useSelector(selectCurrentCountry);
   const dispatch = useDispatch();
   const router = useRouter();
+
+  // remove hash from url
+  useEffect(() => {
+    window.location.hash && router.replace(window.location.origin);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // init & update filtered image contents
   useEffect(() => {
@@ -89,6 +99,11 @@ export default function Home({ globalDataSlice }) {
     setSearchValue(value);
   }
 
+  // handle download all button clicked
+  function handleDownloadAllButtonClicked() {
+    setIsShowingDownloadPanel(true);
+  }
+
   // click card and show image viewer
   function handleCardClicked(id) {
     router.push(`/#${id}`);
@@ -107,6 +122,15 @@ export default function Home({ globalDataSlice }) {
           <div className={styles.locationSelectContainer}>
             <span className={styles.locationSelectLabel}>Location: </span>
             <CountrySelect onChange={handleSelectChanged} />
+            <OcticonWrapper
+              className={styles.downloadAllButton}
+              title="Download All"
+              Icon={DesktopDownloadIcon}
+              size="20"
+              fill="#888"
+              fillOnHover="#333"
+              onClick={handleDownloadAllButtonClicked}
+            />
           </div>
           <div className={styles.searchContainer}>
             <Search onChange={handleSearchChanged}/>
@@ -120,7 +144,22 @@ export default function Home({ globalDataSlice }) {
 
         <ToTopButton />
 
-        { imageViewerContent && <ImageViewer content={imageViewerContent} onClose={() => setImageViewerContent(null)} /> }
+        {
+          imageViewerContent &&
+          <ImageViewer
+            content={imageViewerContent}
+            onClose={() => setImageViewerContent(null)}
+          />
+        }
+
+        {
+          isShowingDownloadPanel && 
+          <DownloadPanel
+            content={filteredImageContents}
+            onClose={() => setIsShowingDownloadPanel(false)}
+            isUsingSearch={searchValue !== ""}
+          />  
+        }
 
       </main>
     </Layout>

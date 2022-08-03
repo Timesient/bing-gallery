@@ -35,6 +35,27 @@
   font-weight: bold;
 }
 
+.downloadAllButton {
+  width: 34px;
+  height: 34px;
+  margin-left: 0.5rem;
+  padding: 0.25rem;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  border: 1px solid #888888;
+  border-radius: 0.25rem;
+
+  transform: translateY(1px);
+  cursor: pointer;
+}
+
+.downloadAllButton:hover {
+  border-color: #333333;
+}
+
 .searchContainer {
   margin-left: 1rem;
 

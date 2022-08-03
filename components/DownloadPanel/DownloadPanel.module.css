@@ -1,0 +1,85 @@
+.mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 999999;
+
+  width: 100vw;
+  height: 100vh;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.container {
+  width: 90%;
+  max-width: 25rem;
+  padding: 1rem;
+
+  display: flex;
+  flex-direction: column;
+
+  background-color: #ffffff;
+  border-radius: 0.25rem;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.configItem {
+  margin-top: 0.75rem;
+
+  display: flex;
+  align-items: center;
+}
+
+.configItemTitle {
+  margin-right: 0.5rem;
+  font-weight: bold;
+}
+
+.configItemValue {
+  color: #0b64c9;
+}
+
+.buttonGroup {
+  width: 100%;
+  margin-top: 1rem;
+
+  display: flex;
+  justify-content: space-between;
+}
+
+.controlButton {
+  width: 49%;
+  height: 2.25rem;
+
+  font-size: 1rem;
+  color: #ffffff;
+
+  outline: none;
+  border: 1px solid #0b64c9;
+  border-radius: 0.25rem;
+  background-color: #0b64c9;
+
+  cursor: pointer;
+}
+
+.controlButton:hover {
+  background-color: rgb(17, 115, 228);
+}
+
+.downloadingStartButton {
+  cursor: not-allowed;
+  border-color: #aaaaaa;
+  background-color: #aaaaaa;
+}
+
+.downloadingStartButton:hover {
+  background-color: #aaaaaa;
+}

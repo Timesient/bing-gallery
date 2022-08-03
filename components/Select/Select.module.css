@@ -10,15 +10,20 @@
   align-items: center;
   justify-content: space-between;
 
-  border: 1px solid #cccccc;
+  border: 1px solid #888888;
   border-radius: 0.25rem;
 
   cursor: pointer;
 }
 
+.selectedOption:hover {
+  border-color: #333333;
+}
+
 .selectedOptionExpanded {
   background-color: #ffffff;
   color: #000000;
+  border-color: #333333;
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
 }
@@ -41,7 +46,7 @@
   height: 12rem;
   overflow-y: scroll;
 
-  border: 1px solid #cccccc;
+  border: 1px solid #333333;
   border-top: none;
   border-bottom-left-radius: 0.25rem;
   border-bottom-right-radius: 0.25rem;
