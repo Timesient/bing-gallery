@@ -89,6 +89,7 @@
 .knowMoreLink {
   color: #55adff;
   text-decoration: underline;
+  word-break: keep-all;
 }
 
 .downloadListContainer {
