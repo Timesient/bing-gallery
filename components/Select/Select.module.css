@@ -68,6 +68,9 @@
 }
 
 .optionWrapper:hover {
-  color: #ffffff;
   background-color: #4899f7;
+}
+
+.optionWrapper:hover span {
+  color: #ffffff;
 }
