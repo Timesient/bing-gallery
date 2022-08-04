@@ -76,6 +76,11 @@
 }
 
 @media screen and (max-width: 600px) {
+  .locationSelectLabel {
+    margin-right: 0.5rem;
+    font-size: 1rem;
+  }
+
   .searchContainer {
     display: none;
   }
