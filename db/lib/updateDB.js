@@ -5,12 +5,20 @@ const schedule = require('node-schedule');
 const { countryConfig } = require('./preset');
 
 /**
- * * get image data from bing official api
+ * * get image data from bing official API
  * @param {*} countryCode country code
  * @returns processd data from bing-official-api's response
  */
 async function getImageData(countryCode) {
-  const contents = await axios.get(`https://www.bing.com/hp/api/model?cc=${countryCode}`).then(res => res.data.MediaContents);
+  let contents;
+
+  await axios
+    .get(`https://www.bing.com/hp/api/model?cc=${countryCode}`)
+    .then(res => contents = res.data.MediaContents)
+    .catch(error => console.log(`Failed to get latest data from office API | cc = ${countryCode} | ${new Date()}`))
+
+  if (!contents) return;
+  
   const digestedContents = contents.map(content => {
     const bingURL = 'https://www.bing.com';
 
@@ -71,6 +79,9 @@ function readData(countryCode) {
  */
 async function updateData(countryCode) {
   const recentImageData = await getImageData(countryCode);
+
+  if (!recentImageData) return;
+
   const dbData = readData(countryCode);
   const timestamps = Object.values(dbData).map(dataset => String(dataset.timestamp));
 
