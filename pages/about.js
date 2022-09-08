@@ -21,11 +21,11 @@ export default function About() {
         
         <span className={styles.sectionTitle}>Features:</span>
         <ul className={styles.list}>
-          <li>Collect different wallpapers from 11 countries.</li>
+          <li>Collect different wallpapers from 12 countries.</li>
           <li>Provide variant resolutions to download, <code>4K UHD</code>, <code>1920x1080</code>, etc.</li>
           <li>Search images by keyword quick as a flash.</li>
           <li>Download all wallpapers in one click.</li>
-          <li>Provide useful <code>API</code> for wallpaper data.</li>
+          <li>Provide useful <code>API</code> for development.</li>
         </ul>
 
         <span className={styles.sectionTitle}>API Request Examples:</span>

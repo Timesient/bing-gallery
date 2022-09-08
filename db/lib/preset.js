@@ -10,6 +10,7 @@ const countryConfig = [
   'gb',
   'us',
   'it',
+  'br',
 ];
 
 Object.freeze(countryConfig);

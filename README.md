@@ -29,6 +29,7 @@ and developed with [React](https://reactjs.org/) and [Next.js](https://nextjs.or
   - `gb`: United Kingdom
   - `us`: United States
   - `it`: Italy
+  - `br`: Brazil
 - `format`: **required if** `mode` **is** `latest` **or** `random`, must be one of:
   - `json`: the response type is json
   - `image`: will redirect to the image, can be used in `<img src='...'>`, `background-image: url(...)`, etc.
