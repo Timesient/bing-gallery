@@ -6,7 +6,9 @@ export default function Document() {
       <Head>
         <meta name="description" content="Bing Gallery - Collect wallpapers from Bing everyday" />
         <link rel="icon" type='image/png' href="/images/favicon.png" />
-        <link rel="stylesheet" href="https://fonts.loli.net/css2?family=Nunito+Sans&family=Noto+Sans+SC&family=JetBrains+Mono&display=swap"/>
+        <link rel='preload' as='font' crossOrigin='crossorigin' type='font/ttf' href='/fonts/NunitoSans-Regular.ttf'/>
+        <link rel='preload' as='font' crossOrigin='crossorigin' type='font/ttf' href='/fonts/JetBrainsMono-Regular.ttf'/>
+        <link rel='preload' as='font' crossOrigin='crossorigin' type='font/otf' href='/fonts/NotoSansSC-Regular.otf'/>
       </Head>
       <body>
         <Main />
