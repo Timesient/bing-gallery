@@ -8,10 +8,22 @@ import styles from './ImageViewer.module.css';
 
 export default function ImageViewer({ content, onClose }) {
   const backgroundImageRef = useRef(null);
+  const [windowHeight, setWindowHeight] = useState(0);
   const [showDownloadList, setShowDownloadList] = useState(false);
   const [isLowWidthScreen, setIsLowWidthScreen] = useState(false);
   const [isDetailFolded, setIsDetailFolded] = useState(false);
   const router = useRouter();
+
+  // handle window's height change
+  useEffect(() => {
+    if (!window) return;
+
+    const resizeHandler = () => setWindowHeight(window.innerHeight);
+    
+    window.addEventListener('resize', resizeHandler);
+
+    return () => window.removeEventListener('resize', resizeHandler);
+  }, []);
 
   // handle navigator back button clicked
   useEffect(() => {
@@ -87,7 +99,7 @@ export default function ImageViewer({ content, onClose }) {
   return (
     <div
       className={styles.container}
-      style={{ height: window.innerHeight }}
+      style={{ height: windowHeight || window.innerHeight }}
       onClick={() => showDownloadList && setShowDownloadList(false)}
     >
       <Head>
