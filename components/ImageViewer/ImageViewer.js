@@ -87,6 +87,7 @@ export default function ImageViewer({ content, onClose }) {
   return (
     <div
       className={styles.container}
+      style={{ height: window.innerHeight }}
       onClick={() => showDownloadList && setShowDownloadList(false)}
     >
       <Head>
