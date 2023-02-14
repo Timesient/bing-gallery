@@ -8,7 +8,6 @@ export default function Document() {
         <link rel="icon" type='image/png' href="/images/favicon.png" />
         <link rel='preload' as='font' crossOrigin='crossorigin' type='font/ttf' href='/fonts/NunitoSans-Regular.ttf'/>
         <link rel='preload' as='font' crossOrigin='crossorigin' type='font/ttf' href='/fonts/JetBrainsMono-Regular.ttf'/>
-        <link rel='preload' as='font' crossOrigin='crossorigin' type='font/otf' href='/fonts/NotoSansSC-Regular.otf'/>
       </Head>
       <body>
         <Main />

@@ -1,4 +1,5 @@
-import '../styles/globals.css'
+import '../styles/globals.css';
+import '../public/fonts/NotoSansSC-Regular/NotoSansSC-Regular.css';
 import App from "next/app";
 import Head from 'next/head';
 import { createWrapper } from "next-redux-wrapper";

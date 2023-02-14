@@ -47,14 +47,6 @@ code {
   src: url(/fonts/JetBrainsMono-Regular.ttf) format('truetype');
 }
 
-@font-face {
-  font-family: 'Noto Sans SC';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url(/fonts/NotoSansSC-Regular.otf) format('opentype');
-}
-
 :root {
   --font-normal: 'Nunito Sans', 'Noto Sans SC';
   --font-mono: 'JetBrains Mono', 'Noto Sans SC';
