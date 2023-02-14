@@ -1,7 +1,7 @@
 const next = require('next');
 const express = require('express');
 const { createServer } = require('http');
-const { updateAllCountryData, startUpdateSchedule } = require('./db/lib/updateDB');
+const { updateAllCountryData, startUpdateSchedule } = require('./lib/updateDB');
 
 (async () => {
   const isDev = process.env.NODE_ENV_NOW !== 'production';
