@@ -10,20 +10,34 @@ export default function ImageViewer({ content, onClose }) {
   const backgroundImageRef = useRef(null);
   const [windowHeight, setWindowHeight] = useState(0);
   const [showDownloadList, setShowDownloadList] = useState(false);
+  const [isWindowReady, setIsWindowReady] = useState(false);
   const [isLowWidthScreen, setIsLowWidthScreen] = useState(false);
   const [isDetailFolded, setIsDetailFolded] = useState(false);
   const router = useRouter();
 
+  // wait for window
+  useEffect(() => {
+    const timer = setInterval(() => {
+      try {
+        if (window) {
+          clearInterval(timer);
+          setIsWindowReady(true);
+          console.log('window is ready!');
+        }
+      } catch (error) {
+        // window is not ready
+      }
+    }, 20);
+  }, []);
+
   // handle window's height change
   useEffect(() => {
-    if (!window) return;
-
     const resizeHandler = () => setWindowHeight(window.innerHeight);
     
     window.addEventListener('resize', resizeHandler);
 
     return () => window.removeEventListener('resize', resizeHandler);
-  }, []);
+  }, [isWindowReady]);
 
   // handle navigator back button clicked
   useEffect(() => {
@@ -36,7 +50,7 @@ export default function ImageViewer({ content, onClose }) {
     return () => {
       window.removeEventListener('hashchange', handleHashChange);
     }
-  }, [onClose]);
+  }, [isWindowReady, onClose]);
 
 
   // handle screen width change
@@ -52,7 +66,7 @@ export default function ImageViewer({ content, onClose }) {
     return () => {
       window.removeEventListener('resize', handleScreenWidthChange);
     }
-  }, []);
+  }, [isWindowReady]);
 
 
   // disable body scroll
