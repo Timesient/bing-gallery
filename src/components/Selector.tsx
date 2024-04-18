@@ -83,7 +83,7 @@ export default function Selector({
     function clickHandler(event: MouseEvent) {
       let target = event.target as HTMLElement;
       if (target.tagName === 'path' && target.parentElement && target.parentElement.parentElement) target = target.parentElement.parentElement;
-      if (target.tagName === 'svg' && target.classList.toString().includes('Selector__DownIcon') && target.parentElement) target = target.parentElement;
+      if (target.tagName === 'svg' && target.parentElement) target = target.parentElement;
       if (target === currentOptionElementRef.current) return;
       setIsOpening(false);
     }
