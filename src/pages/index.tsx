@@ -6,6 +6,7 @@ import { LinkExternalIcon } from "@primer/octicons-react";
 import CountrySelector from "@/components/CountrySelector";
 import YearSelector from "@/components/YearSelector";
 import Gallery from "@/components/Gallery";
+import ToTopButton from "@/components/ToTopButton";
 import { WallpaperGroup } from "@/lib/types";
 
 const montserrat = Montserrat({ subsets: ["latin", "latin-ext"], weight: "500" });
@@ -144,6 +145,7 @@ export default function Index() {
         <Main>
           { wallpaperData.length ? <Gallery wallpaperData={wallpaperData} /> : <></> }
         </Main>
+        <ToTopButton />
       </Root>
     </>
   );
