@@ -97,6 +97,7 @@ const Main = styled.div`
 `;
 
 export default function Index() {
+  const [isHeaderReadyToShow, setIsHeaderReadyToShow] = useState(false);
   const [headerBackgroundImageUrl, setHeaderBackgroundImageUrl] = useState('');
   const [currentCountry, setCurrentCountry] = useState('Global');
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear().toString());
@@ -111,6 +112,7 @@ export default function Index() {
       .then(res => res.json())
       .then(json => {
         setHeaderBackgroundImageUrl(`https://bing.com/th?id=${json.data[0].data[0].id}_320x240.jpg`);
+        setIsHeaderReadyToShow(true);
         setWallpaperData(json.data);
       })
   }, [currentCountry, currentYear]);
@@ -124,17 +126,21 @@ export default function Index() {
         <link rel="icon" href="/icons/favicon.png" />
       </Head>
       <Root className={montserrat.className}>
-        <Header $backgroundImageUrl={headerBackgroundImageUrl}>
-          <TitleContainer>
-            <Title>BING · GALLERY</Title>
-            <SubTitle>Bing wallpaper everyday</SubTitle>
-          </TitleContainer>
-          <MenuContainer>
-            <CountrySelector selectOnChangeHandler={setCurrentCountry} />
-            <YearSelector selectOnChangeHandler={setCurrentYear} />
-            <RepoLink href="https://github.com/Timesient/bing-gallery" target="_blank" rel="noopener noreferrer">Github<ExternalIcon size={14}/></RepoLink>
-          </MenuContainer>
-        </Header>
+        {
+          isHeaderReadyToShow && (
+            <Header $backgroundImageUrl={headerBackgroundImageUrl}>
+              <TitleContainer>
+                <Title>BING · GALLERY</Title>
+                <SubTitle>Bing wallpaper everyday</SubTitle>
+              </TitleContainer>
+              <MenuContainer>
+                <CountrySelector selectOnChangeHandler={setCurrentCountry} />
+                <YearSelector selectOnChangeHandler={setCurrentYear} />
+                <RepoLink href="https://github.com/Timesient/bing-gallery" target="_blank" rel="noopener noreferrer">Github<ExternalIcon size={14}/></RepoLink>
+              </MenuContainer>
+            </Header>
+          )
+        }
         <Main>
           { wallpaperData.length ? <Gallery wallpaperData={wallpaperData} /> : <></> }
         </Main>
