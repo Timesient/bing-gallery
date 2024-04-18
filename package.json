@@ -1,32 +1,26 @@
 {
-  "name": "bing",
+  "name": "bing-gallery",
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "cross-env NODE_ENV_NOW=development node entry.js",
-    "prod": "next build && cross-env NODE_ENV_NOW=production node entry.js",
-    "pm2": "next build && pm2 start pm2.config.js --env production",
+    "dev": "next dev",
     "build": "next build",
-    "start": "next start",
+    "start": "next build && next start -p 23456",
     "lint": "next lint"
   },
   "dependencies": {
-    "@primer/octicons-react": "^17.3.0",
-    "@reduxjs/toolkit": "^1.8.2",
-    "axios": "^0.27.2",
-    "cross-env": "^7.0.3",
-    "express": "^4.18.1",
-    "file-saver": "^2.0.5",
-    "jszip": "^3.10.1",
-    "next": "12.1.6",
-    "next-redux-wrapper": "^7.0.5",
-    "node-schedule": "^2.1.0",
-    "react": "18.1.0",
-    "react-dom": "18.1.0",
-    "react-redux": "^8.0.2"
+    "@primer/octicons-react": "^19.9.0",
+    "next": "14.2.1",
+    "react": "^18",
+    "react-dom": "^18",
+    "styled-components": "^6.1.8"
   },
   "devDependencies": {
-    "eslint": "8.16.0",
-    "eslint-config-next": "12.1.6"
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "eslint": "^8",
+    "eslint-config-next": "14.2.1",
+    "typescript": "^5"
   }
 }
