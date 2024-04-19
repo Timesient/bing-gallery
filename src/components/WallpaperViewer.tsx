@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { useEffect, useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { XIcon, DownloadIcon, LinkExternalIcon } from "@primer/octicons-react";
 import { WallpaperDetail } from "@/lib/types";
 import LoadingCircle from "./LoadingCircle";
@@ -132,6 +132,19 @@ export default function WallpaperViewer({
 }) {
   const [backgroundImageArrayBuffer, setBackgroundImageArrayBuffer] = useState<ArrayBuffer>();
   const [isDownloadButtonClicked, setIsDownloadButtonClicked] = useState(false);
+  const closeWallpaperViewer = useCallback(() => {
+    window.history.back();
+    wallpaperViewerCloseHandler();
+  }, [wallpaperViewerCloseHandler]);
+
+  // push history state when wallpaper viewer opened 
+  useEffect(() => {
+    window.history.pushState({}, "", `?id=${data.id}`);
+
+    window.addEventListener('popstate', closeWallpaperViewer, true);
+
+    return () => window.removeEventListener('popstate', closeWallpaperViewer, true);
+  }, [data.id, closeWallpaperViewer]);
 
   // fetch background image
   useEffect(() => {
@@ -156,7 +169,7 @@ export default function WallpaperViewer({
 
   return (
     <Root $backgroundImageUrl={ backgroundImageArrayBuffer ? `https://bing.com/th?id=${data.id}_UHD.jpg` : ''}>
-      <CloseButton onClick={() => wallpaperViewerCloseHandler()}><XIcon size={20} /></CloseButton>
+      <CloseButton onClick={closeWallpaperViewer}><XIcon size={20} /></CloseButton>
       <DetailContainer>
         <DetailTitle>{`${data.title} ${data.copyright}`}</DetailTitle>
         <DetailContent>
