@@ -109,13 +109,21 @@ export default function Index() {
     setWallpaperData([]);
     
     // fetch new data from API
-    fetch(`${location.protocol}//${location.hostname}:23457/api/getWallpapers?${new URLSearchParams({ country: currentCountry, year: currentYear })}`)
-      .then(res => res.json())
-      .then(json => {
-        setHeaderBackgroundImageUrl(`https://bing.com/th?id=${json.data[0].data[0].id}_320x240.jpg`);
-        setIsHeaderReadyToShow(true);
-        setWallpaperData(json.data);
-      })
+    (async () => {
+      const apiUrl = `${location.protocol}//${location.hostname}:23457/api/getWallpapers?${new URLSearchParams({ country: currentCountry, year: currentYear })}`;
+      const apiResponse = await fetch(apiUrl).then(res => res.json());
+      setWallpaperData(apiResponse.data);
+
+      for (const wallpaperDetail of apiResponse.data[0].data) {
+        const wallpaperUrl = `https://bing.com/th?id=${wallpaperDetail.id}_320x240.jpg`;
+        const isFileExist = await fetch(wallpaperUrl).then(res => res.status === 200);
+        if (isFileExist) {
+          setHeaderBackgroundImageUrl(wallpaperUrl);
+          setIsHeaderReadyToShow(true);
+          break;
+        }
+      }
+    })();
   }, [currentCountry, currentYear]);
 
   return (
