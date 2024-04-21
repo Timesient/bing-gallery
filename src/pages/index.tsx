@@ -104,6 +104,7 @@ export default function Index() {
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear().toString());
   const [wallpaperData, setWallpaperData] = useState<WallpaperGroup[]>([]);
   
+  // remove parameter 'id' from URL
   useEffect(() => {
     const isIdExistInUrl = new URLSearchParams(window.location.search).get('id') !== null;
     if (isIdExistInUrl) {
