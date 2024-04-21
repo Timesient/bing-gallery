@@ -105,6 +105,14 @@ export default function Index() {
   const [wallpaperData, setWallpaperData] = useState<WallpaperGroup[]>([]);
   
   useEffect(() => {
+    const isIdExistInUrl = new URLSearchParams(window.location.search).get('id') !== null;
+    if (isIdExistInUrl) {
+      window.history.replaceState({}, '', '/');
+      window.location.reload();
+    }
+  }, []);
+  
+  useEffect(() => {
     // clear wallpaper first
     setWallpaperData([]);
     

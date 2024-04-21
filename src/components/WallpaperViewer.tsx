@@ -133,6 +133,7 @@ export default function WallpaperViewer({
   const [backgroundImageArrayBuffer, setBackgroundImageArrayBuffer] = useState<ArrayBuffer>();
   const [isDownloadButtonClicked, setIsDownloadButtonClicked] = useState(false);
   const closeWallpaperViewer = useCallback(() => {
+    window.history.replaceState({}, '', '/');
     window.history.back();
     wallpaperViewerCloseHandler();
   }, [wallpaperViewerCloseHandler]);
